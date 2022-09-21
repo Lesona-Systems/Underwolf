@@ -16,14 +16,14 @@ def main():
         "https://www.curseforge.com/wow/addons/all-the-things/download",
         "https://www.curseforge.com/wow/addons/handynotes-shadowlands/download",
         "https://www.curseforge.com/wow/addons/simulationcraft/download",
+        "https://www.tukui.org/downloads/elvui-12.90.zip",
         ]
 
     # open a new webbrowser, using splash.html page as an anchor for new tabs
     webbrowser.open_new("file://" + os.path.realpath("splash.html"))
 
     # logic for determining system type and assigning correct download directory on Mac & Windows
-    dl_dir = (os.path.expanduser('~') + "/Downloads") # Mac
-    # TODO Windows (must ye make it so difficult, MC?)
+    dl_dir = get_download_path()
 
     # Set variables for current file count and target file count (so we can error check)
     dl_dir_count = 0
@@ -59,6 +59,19 @@ def main():
     for filename in zips:
         with zipfile.ZipFile(filename,"r") as zipped_file:
             zipped_file.extractall(f"{dl_dir}\\addons")
+
+
+# https://stackoverflow.com/questions/35851281/python-finding-the-users-downloads-folder
+def get_download_path():
+    if os.name == 'nt':
+        import winreg
+        sub_key = r'SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Shell Folders'
+        downloads_guid = '{374DE290-123F-4565-9164-39C4925E467B}'
+        with winreg.OpenKey(winreg.HKEY_CURRENT_USER, sub_key) as key:
+            location = winreg.QueryValueEx(key, downloads_guid)[0]
+        return location
+    else:
+        return os.path.join(os.path.expanduser('~'), 'Downloads')
 
 if __name__ == "__main__":
     main()
