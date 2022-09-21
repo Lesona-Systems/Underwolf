@@ -20,7 +20,7 @@ def main():
         ]
 
     # open a new webbrowser, using splash.html page as an anchor for new tabs
-    webbrowser.open_new("file://" + os.path.realpath("splash.html"))
+    webbrowser.open_new('file://' + os.path.realpath('splash.html'))
 
     # logic for determining system type and assigning correct download directory on Mac & Windows
     dl_dir = get_download_path()
@@ -57,7 +57,7 @@ def main():
                 continue
 # untested below
     for filename in zips:
-        with zipfile.ZipFile(filename,"r") as zipped_file:
+        with zipfile.ZipFile(filename,'r') as zipped_file:
             zipped_file.extractall(f"{dl_dir}\\addons")
 
 
