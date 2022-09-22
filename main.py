@@ -75,8 +75,8 @@ def main():
 
     # For files in dl_dir, if the file's last-modified timestamp is later
     # than the timestamp recorded when we ran the script, assume those
-    # files are the addons we just downloaded. I acknowledge that's awful
-    # logic. I'm working on it.
+    # files are the addons we just downloaded. I acknowledge that it's
+    # bad logic. I'm working on it.
     if dl_dir_count == dl_dir_target:
         for filename in os.listdir(dl_dir):
             full_path = os.path.join(dl_dir, filename)
@@ -85,13 +85,14 @@ def main():
             else:
                 continue
 
+    # extract each addon to temp addon directory
     for filename in zips:
         with zipfile.ZipFile(filename,'r') as zipped_file:
             zipped_file.extractall(dl_dir_addons)
 
-    # This is ugly
     addon_path = get_addon_path()
 
+    # move addon temp dir and overwrite WoW addon dir
     try:
         shutil.rmtree(addon_path)
         shutil.move(dl_dir_addons, addon_path)
@@ -99,8 +100,9 @@ def main():
         print("Error")
 
     print("Killing browser processes...")
-    os.system("taskkill /F /IM firefox.exe")
+    os.system("taskkill /F /IM firefox.exe") # force kill running Firefox processes
 
+    # remove downloaded addon zip files
     print("Cleaning downloads folder...")
     for filename in zips:
         os.remove(filename)
@@ -118,6 +120,7 @@ def get_download_path():
     else:
         return os.path.join(os.path.expanduser('~'), 'Downloads')
 
+# these addon paths are default install paths for World of Warcraft
 def get_addon_path():
     if os.name == 'nt':
         wow_addon_path = "C:\Program Files (x86)\World of Warcraft\_retail_\Interface\AddOns"

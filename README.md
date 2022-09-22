@@ -6,6 +6,8 @@ The script currently requires uBlock Origin and it's ability to "fast-forward" t
 
 Underwolf currently has no version checking, meaning that the script will redownload every addon each time it is run, which isn't ideal. I've found it worth logging in and seeing if any priority addons need updating and running then deciding whether or not to run the script.
 
+The script calls taskkill on Firefox process at the end to clean up. It will close any open Firefox processes when called.
+
 Tested on MacOS Ventura v13.0 Beta (22A5352e) and Windows 11 (Stable) using Firefox 104.0.2 with uBlockOrigin 1.44.4 as of September 22, 2022.
 
 ## Copyright © 2022 Nicholas Johnson
