@@ -15,8 +15,8 @@ def main():
     # get current epoch for dl time comparison
     now = time()
 
-    # list of download urls
-    url_list = open("url_list.txt", 'r').read().splitlines()
+    # parse url_list.txt
+    url_list = open('url_list.txt', 'r').read().splitlines()
 
     # open a new webbrowser, using splash.html page as an anchor for new tabs
     webbrowser.open_new('file://' + os.path.realpath('splash.html'))
@@ -27,9 +27,9 @@ def main():
     print(f'Current download directory is {dl_dir}')
 
     if os.name == 'nt':
-        dl_dir_addons = os.path.join(dl_dir, "AddOns")
+        dl_dir_addons = os.path.join(dl_dir, 'AddOns')
     else:
-        dl_dir_addons = os.path.join(dl_dir, "Addons")
+        dl_dir_addons = os.path.join(dl_dir, 'Addons')
 
     print(f'Successfully created temp dir at {dl_dir_addons}')
 
@@ -84,13 +84,13 @@ def main():
         shutil.rmtree(addon_path)
         shutil.move(dl_dir_addons, addon_path)
     except:
-        print("Error")
+        print('Error')
 
-    print("Killing browser processes...")
-    os.system("taskkill /F /IM firefox.exe") # force kill running Firefox processes
+    print('Killing browser processes...')
+    os.system('taskkill /F /IM firefox.exe') # force kill running Firefox processes
 
     # remove downloaded addon zip files
-    print("Cleaning downloads folder...")
+    print('Cleaning downloads folder...')
     for filename in zips:
         os.remove(filename)
 
@@ -110,12 +110,12 @@ def get_download_path():
 # these addon paths are default install paths for World of Warcraft
 def get_addon_path():
     if os.name == 'nt':
-        wow_addon_path = "C:\Program Files (x86)\World of Warcraft\_retail_\Interface\AddOns"
+        wow_addon_path = 'C:\Program Files (x86)\World of Warcraft\_retail_\Interface\AddOns'
         return wow_addon_path
     else:
-        wow_addon_path = "/Applications/World of Warcraft/_retail_/Interface/Addons"
+        wow_addon_path = '/Applications/World of Warcraft/_retail_/Interface/Addons'
         return wow_addon_path
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     main()
