@@ -60,7 +60,7 @@ def main():
         with zipfile.ZipFile(filename,'r') as zipped_file:
             zipped_file.extractall(f"{dl_dir}\\addons")
 
-
+# Just for the record, this is needlessly complicated
 # https://stackoverflow.com/questions/35851281/python-finding-the-users-downloads-folder
 def get_download_path():
     if os.name == 'nt':
