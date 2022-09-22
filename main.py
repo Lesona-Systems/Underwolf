@@ -1,3 +1,13 @@
+# Copyright © 2022 Nicholas Johnson
+
+# Permission to use, copy, modify, distribute, and sell this software and its
+# documentation for any purpose is hereby granted without fee, provided that
+# the above copyright notice appear in all copies and that both that
+# copyright notice and this permission notice appear in supporting
+# documentation.  No representations are made about the suitability of this
+# software for any purpose.  It is provided "as is" without express or
+# implied warranty.
+
 import os, zipfile, webbrowser, shutil
 from time import sleep, time
 
@@ -18,33 +28,40 @@ def main():
         "https://www.curseforge.com/wow/addons/simulationcraft/download",
         "https://www.tukui.org/downloads/elvui-12.90.zip",
         "https://www.tradeskillmaster.com/download/TradeSkillMaster.zip",
-        "https://www.tradeskillmaster.com/download/TradeSkillMaster_AppHelper.zip"
+        "https://www.tradeskillmaster.com/download/TradeSkillMaster_AppHelper.zip",
         ]
 
     # open a new webbrowser, using splash.html page as an anchor for new tabs
     webbrowser.open_new('file://' + os.path.realpath('splash.html'))
 
-    # logic for determining system type and assigning correct download directory on Mac & Windows
+    # logic for determining system type and assigning
+    # correct download directory on Mac & Windows
     dl_dir = get_download_path()
     print(f'Current download directory is {dl_dir}')
-    dl_dir_addons = os.path.join(dl_dir, "AddOns")
-    # os.mkdir(dl_dir_addons)
-    print('Successfully created temp dir at {dl_dir_addons}')
 
-    # Set variables for current file count and target file count (so we can error check)
+    if os.name == 'nt':
+        dl_dir_addons = os.path.join(dl_dir, "AddOns")
+    else:
+        dl_dir_addons = os.path.join(dl_dir, "Addons")
+
+    print(f'Successfully created temp dir at {dl_dir_addons}')
+
+    # Set variables for current file count and target file count
+    # (so we can error check) & count number of files in Download
+    # directory before url_list downloads
     dl_dir_count = 0
-    # count number of files in Download directory before url_list downloads
     for filename in os.listdir(dl_dir):
         dl_dir_count += 1
 
     dl_dir_target = dl_dir_count + len(url_list)
 
     ##############
-    # Note: the following REQUIRES uBlock Origin - it fast forwards through
-    # the JS "your download will begin in n seconds" waiting message
-    # and susequent (n) second wait time. We sleep for (2) seconds to safely
-    # wait until the download starts, a feature I'm assuming has to do with
-    # requiring browser tabs to be in focus to start a download.
+    # Note: the following REQUIRES uBlock Origin - it fast forwards
+    # through the JS "your download will begin in n seconds" waiting
+    # message and susequent (n) second wait time. We sleep for (2) 
+    # seconds to wait until the download starts, a feature I'm
+    # assuming has to do with requiring browser tabs to be in focus
+    # to start a download.
     #############
 
     # open each download page to trigger the download
@@ -52,11 +69,14 @@ def main():
         webbrowser.open_new_tab(url)
         sleep(2)
         dl_dir_count += 1
-
-    sleep(2)
+    sleep(2) # Wait for two more seconds to make sure downloads finish
 
     zips = []
 
+    # For files in dl_dir, if the file's last-modified timestamp is later
+    # than the timestamp recorded when we ran the script, assume those
+    # files are the addons we just downloaded. I acknowledge that's awful
+    # logic. I'm working on it.
     if dl_dir_count == dl_dir_target:
         for filename in os.listdir(dl_dir):
             full_path = os.path.join(dl_dir, filename)
@@ -105,6 +125,7 @@ def get_addon_path():
     else:
         wow_addon_path = "/Applications/World of Warcraft/_retail_/Interface/Addons"
         return wow_addon_path
+
 
 if __name__ == "__main__":
     main()
