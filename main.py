@@ -1,4 +1,4 @@
-import os, zipfile, webbrowser
+import os, zipfile, webbrowser, shutil
 from time import sleep, time
 
 def main():
@@ -17,6 +17,8 @@ def main():
         "https://www.curseforge.com/wow/addons/handynotes-shadowlands/download",
         "https://www.curseforge.com/wow/addons/simulationcraft/download",
         "https://www.tukui.org/downloads/elvui-12.90.zip",
+        "https://www.tradeskillmaster.com/download/TradeSkillMaster.zip",
+        "https://www.tradeskillmaster.com/download/TradeSkillMaster_AppHelper.zip"
         ]
 
     # open a new webbrowser, using splash.html page as an anchor for new tabs
@@ -24,14 +26,18 @@ def main():
 
     # logic for determining system type and assigning correct download directory on Mac & Windows
     dl_dir = get_download_path()
+    print(f'Current download directory is {dl_dir}')
+    dl_dir_addons = os.path.join(dl_dir, "AddOns")
+    # os.mkdir(dl_dir_addons)
+    print('Successfully created temp dir at {dl_dir_addons}')
 
     # Set variables for current file count and target file count (so we can error check)
     dl_dir_count = 0
-    dl_dir_target = dl_dir_count + len(url_list)
-
     # count number of files in Download directory before url_list downloads
     for filename in os.listdir(dl_dir):
         dl_dir_count += 1
+
+    dl_dir_target = dl_dir_count + len(url_list)
 
     ##############
     # Note: the following REQUIRES uBlock Origin - it fast forwards through
@@ -45,6 +51,9 @@ def main():
     for url in url_list:
         webbrowser.open_new_tab(url)
         sleep(2)
+        dl_dir_count += 1
+
+    sleep(2)
 
     zips = []
 
@@ -55,14 +64,30 @@ def main():
                 zips.append(full_path)
             else:
                 continue
-# untested below
+
     for filename in zips:
         with zipfile.ZipFile(filename,'r') as zipped_file:
-            zipped_file.extractall(f"{dl_dir}\\addons")
+            zipped_file.extractall(dl_dir_addons)
 
-# Just for the record, this is needlessly complicated
-# https://stackoverflow.com/questions/35851281/python-finding-the-users-downloads-folder
+    # This is ugly
+    addon_path = get_addon_path()
+
+    try:
+        shutil.rmtree(addon_path)
+        shutil.move(dl_dir_addons, addon_path)
+    except:
+        print("Error")
+
+    print("Killing browser processes...")
+    os.system("taskkill /F /IM firefox.exe")
+
+    print("Cleaning downloads folder...")
+    for filename in zips:
+        os.remove(filename)
+
 def get_download_path():
+    # Just for the record, this is needlessly complicated
+    # https://stackoverflow.com/questions/35851281/python-finding-the-users-downloads-folder
     if os.name == 'nt':
         import winreg
         sub_key = r'SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Shell Folders'
@@ -72,6 +97,14 @@ def get_download_path():
         return location
     else:
         return os.path.join(os.path.expanduser('~'), 'Downloads')
+
+def get_addon_path():
+    if os.name == 'nt':
+        wow_addon_path = "C:\Program Files (x86)\World of Warcraft\_retail_\Interface\AddOns"
+        return wow_addon_path
+    else:
+        wow_addon_path = "/Applications/World of Warcraft/_retail_/Interface/Addons"
+        return wow_addon_path
 
 if __name__ == "__main__":
     main()
