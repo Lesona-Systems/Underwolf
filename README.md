@@ -1,6 +1,6 @@
 # Underwolf
 
-Underwolf is my current best answer to updating my World of Warcraft addons. It utilizes Python's built-in webbrowser library to navigate to CurseForge download pages and download the specified addons, unzip them, and move them into the WoW addon folder.
+Underwolf is my current best answer to updating my World of Warcraft addons. It utilizes Python's built-in webbrowser library to navigate to CurseForge download pages and download the specified addons (listed, one per line, in url_list.txt), unzip them, and move them into the WoW addon folder.
 
 The script currently requires uBlock Origin and it's ability to "fast-forward" the imposed 5-second wait time before the download starts on CurseForge download pages (-_-). Without uBlock Origin, the script will not work.
 
