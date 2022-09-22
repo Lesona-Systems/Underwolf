@@ -16,20 +16,7 @@ def main():
     now = time()
 
     # list of download urls
-    url_list = [
-        "https://www.curseforge.com/wow/addons/deadly-boss-mods/download",
-        "https://www.curseforge.com/wow/addons/details/download",
-        "https://www.curseforge.com/wow/addons/weakauras-2/download",
-        "https://www.curseforge.com/wow/addons/rarescanner/download",
-        "https://www.curseforge.com/wow/addons/pawn/download",
-        "https://www.curseforge.com/wow/addons/handynotes/download",
-        "https://www.curseforge.com/wow/addons/all-the-things/download",
-        "https://www.curseforge.com/wow/addons/handynotes-shadowlands/download",
-        "https://www.curseforge.com/wow/addons/simulationcraft/download",
-        "https://www.tukui.org/downloads/elvui-12.90.zip",
-        "https://www.tradeskillmaster.com/download/TradeSkillMaster.zip",
-        "https://www.tradeskillmaster.com/download/TradeSkillMaster_AppHelper.zip",
-        ]
+    url_list = open("url_list.txt", 'r').read().splitlines()
 
     # open a new webbrowser, using splash.html page as an anchor for new tabs
     webbrowser.open_new('file://' + os.path.realpath('splash.html'))
