@@ -1,14 +1,14 @@
 # Underwolf
 
-Underwolf is my current best answer to updating my World of Warcraft addons. It utilizes Python's built-in webbrowser library to navigate to CurseForge download pages and download the specified addons (listed, one per line, in url_list.txt), unzip them, and move them into the WoW addon folder.
+Underwolf is my current best answer to updating my World of Warcraft addons after the retirement of the CurseForge API. It utilizes Python's built-in webbrowser library to navigate to CurseForge download pages and download the specified addons (listed, one per line, in url_list.txt), unzip them, and move them into the WoW addon folder.
 
-The script currently requires uBlock Origin and it's ability to "fast-forward" the imposed 5-second wait time before the download starts on CurseForge download pages (-_-). Without uBlock Origin, the script will not work.
+The script currently **requires **[uBlock Origin](https://addons.mozilla.org/en-US/firefox/addon/ublock-origin/)** and it's ability to "fast-forward" the imposed 5-second wait time before the download starts on CurseForge download pages (-_-). Without uBlock Origin, the script will not work.
 
-Underwolf currently has no version checking, meaning that the script will redownload every addon each time it is run, which isn't ideal. I've found it worth logging in and seeing if any priority addons need updating and running then deciding whether or not to run the script. Version checking is a priority for future releases.
+**Underwolf currently has no addon version checking**, meaning that the script will redownload every addon each time it is run. This isn't ideal. I've found it worth logging in and seeing if any priority addons need updating and running then deciding whether or not to run the script. Version checking is a priority for future releases.
 
-Note that the script calls taskkill on Firefox process at the end to clean up. It will close any open Firefox processes when called.
+Note that the script calls **taskkill** on Firefox process at the end to clean up. It will close any open Firefox processes when called.
 
-Tested on MacOS Ventura v13.0 Beta (22A5352e) and Windows 11 (Stable) using Firefox 104.0.2 with uBlockOrigin 1.44.4 as of September 22, 2022.
+Tested on **MacOS Ventura v13.0 Beta (22A5352e)** and **Windows 11 (Stable)** using **Firefox 104.0.2** with **uBlockOrigin 1.44.4** as of September 22, 2022. Theoretically, it should work on Chrome as well.
 
 ## Copyright © 2022 Nicholas Johnson
 
