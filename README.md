@@ -4,6 +4,8 @@
 
 Underwolf is my current best answer to updating my World of Warcraft addons after the retirement of the CurseForge API. It utilizes Python's built-in webbrowser library to navigate to [CurseForge](https://www.curseforge.com/) download pages (as well as other direct download URLs, such as Tukui and Trade Skill Master) and download the specified addons (listed, one per line, in [url_list.txt](https://github.com/Lesona-Systems/Underwolf/blob/main/url_list.txt)), unzip them, and move them into the WoW addon folder.
 
+## Requirements
+
 The script currently **requires [Firefox](https://www.mozilla.org/en-US/firefox/new/) and [uBlock Origin](https://addons.mozilla.org/en-US/firefox/addon/ublock-origin/).** uBlock Origin "fast-forwards" the CurseForge imposed 5-second wait time (as well as other sites) before the download starts on the download pages (-_-). 
 
 **Without uBlock Origin, the script will not work.**
