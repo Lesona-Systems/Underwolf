@@ -12,7 +12,7 @@ import os, zipfile, webbrowser, shutil
 from time import sleep, time
 
 def main():
-    # get current epoch for dl time comparison
+    # get current epoch for dl time comparison (so we know which files to unzip)
     now = time()
 
     # parse url_list.txt
