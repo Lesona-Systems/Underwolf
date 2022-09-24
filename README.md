@@ -10,7 +10,7 @@ The script currently **requires [Firefox](https://www.mozilla.org/en-US/firefox/
 
 Note that the script calls **taskkill** on Firefox process at the end to clean up. It will close any open Firefox processes when called.
 
-Tested on **MacOS Ventura v13.0 Beta (22A5352e)** and **Windows 11 (Stable)** using **Firefox 104.0.2** with **uBlockOrigin 1.44.4** as of September 22, 2022. Theoretically, it should work on Chrome as well.
+Tested on **MacOS Ventura v13.0 Beta (22A5352e)** and **Windows 11 (Stable)** using **Firefox 104.0.2** with **uBlockOrigin 1.44.4** as of September 22, 2022. Chrome implementation is planned for a later version (Although that may become obsolete with Manifest V3).
 
 ## Copyright © 2022 Nicholas Johnson
 
