@@ -12,8 +12,13 @@ import os, zipfile, webbrowser, shutil
 from time import sleep, time
 
 def main():
-    # get current epoch for dl time comparison
+    # get current epoch for dl time comparison (so we know which files to unzip)
     now = time()
+
+    class colors:
+        GREEN = '\033[92m'
+        FAIL = '\033[91m'
+        ENDC = '\033[0m'
 
     # parse url_list.txt
     url_list = open('url_list.txt', 'r').read().splitlines()
@@ -24,14 +29,12 @@ def main():
     # logic for determining system type and assigning
     # correct download directory on Mac & Windows
     dl_dir = get_download_path()
-    print(f'Current download directory is {dl_dir}')
+    print(f'Using default Firefox download directory at {colors.GREEN}{dl_dir}{colors.ENDC}')
 
     if os.name == 'nt':
         dl_dir_addons = os.path.join(dl_dir, 'AddOns')
     else:
         dl_dir_addons = os.path.join(dl_dir, 'Addons')
-
-    print(f'Successfully created temp dir at {dl_dir_addons}')
 
     # Set variables for current file count and target file count
     # (so we can error check) & count number of files in Download
@@ -53,10 +56,11 @@ def main():
 
     # open each download page to trigger the download
     for url in url_list:
+        print(f'Opening {colors.GREEN}{url}{colors.ENDC}')
         webbrowser.open_new_tab(url)
         sleep(2)
         dl_dir_count += 1
-    sleep(2) # Wait for two more seconds to make sure downloads finish
+    sleep(2) # Wait for two more seconds and hope downloads are finished
 
     zips = []
 
@@ -84,13 +88,13 @@ def main():
         shutil.rmtree(addon_path)
         shutil.move(dl_dir_addons, addon_path)
     except:
-        print('Error')
+        print(f'{colors.FAIL}Error during folder move process...{colors.ENDC}')
 
     print('Killing browser processes...')
     os.system('taskkill /F /IM firefox.exe') # force kill running Firefox processes
 
     # remove downloaded addon zip files
-    print('Cleaning downloads folder...')
+    print(f'Cleaning {colors.GREEN}Downloads{colors.ENDC} folder...')
     for filename in zips:
         os.remove(filename)
 
