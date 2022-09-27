@@ -11,17 +11,27 @@
 import os, zipfile, webbrowser, shutil
 from time import sleep, time
 
+class colors:
+    GREEN = '\033[92m'
+    FAIL = '\033[91m'
+    ENDC = '\033[0m'
+    BOLD = '\033[1m'
+    UNDERLINE = '\033[4m'
+
 def main():
     # get current epoch for dl time comparison (so we know which files to unzip)
     now = time()
 
-    class colors:
-        GREEN = '\033[92m'
-        FAIL = '\033[91m'
-        ENDC = '\033[0m'
-
     # parse url_list.txt
-    url_list = open('url_list.txt', 'r').read().splitlines()
+    try:
+        if os.path.exists('url_list.txt'):
+            with open('url_list.txt', 'r') as f:
+                url_list = f.read().splitlines()
+    except FileNotFoundError:
+        print(f'{colors.FAIL}ERROR{colors.ENDC}')
+        print(f'{colors.BOLD}url_list.txt{colors.ENDC} not found! Please create url_list.txt and populate it with desired addon download urls.')
+        print(f'{colors.FAIL}Quitting!{colors.ENDC}')
+        quit()
 
     # open a new webbrowser, using splash.html page as an anchor for new tabs
     webbrowser.open_new('file://' + os.path.realpath('splash.html'))
@@ -87,7 +97,7 @@ def main():
     try:
         shutil.rmtree(addon_path)
         shutil.move(dl_dir_addons, addon_path)
-    except:
+    except Exception:
         print(f'{colors.FAIL}Error during folder move process...{colors.ENDC}')
 
     print('Killing browser processes...')
@@ -115,11 +125,22 @@ def get_download_path():
 def get_addon_path():
     if os.name == 'nt':
         wow_addon_path = 'C:\Program Files (x86)\World of Warcraft\_retail_\Interface\AddOns'
+        if os.path.exists(wow_addon_path):
+            return wow_addon_path
+        else:
+            print(f'{colors.FAIL}Error!{colors.ENDC}')
+            print(f'{wow_addon_path} does not exist! Ensure you have run World of Warcraft at least once to generate the folder structure.')
+
         return wow_addon_path
     else:
         wow_addon_path = '/Applications/World of Warcraft/_retail_/Interface/Addons'
-        return wow_addon_path
-
+        if os.path.exists(wow_addon_path):
+            return wow_addon_path
+        else:
+            print(f'{colors.FAIL}Error!{colors.ENDC}')
+            print(f'{colors.BOLD}{wow_addon_path}{colors.ENDC} does not exist! Ensure you have run World of Warcraft at least once to generate the folder structure.')
+            print(f'{colors.FAIL}Quitting!{colors.ENDC}')
+            quit()
 
 if __name__ == '__main__':
     main()
