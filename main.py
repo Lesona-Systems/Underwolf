@@ -28,8 +28,7 @@ def main():
             with open('url_list.txt', 'r') as f:
                 url_list = f.read().splitlines()
     except FileNotFoundError:
-        print(f'{colors.FAIL}ERROR{colors.ENDC}')
-        print(f'{colors.BOLD}url_list.txt{colors.ENDC} not found! Please create url_list.txt and populate it with desired addon download urls.')
+        print(f'{colors.FAIL}ERROR!{colors.ENDC} {colors.BOLD}url_list.txt{colors.ENDC} not found! \n Please create url_list.txt and populate it with desired addon download urls.')
         print(f'{colors.FAIL}Quitting!{colors.ENDC}')
         quit()
 
@@ -107,6 +106,7 @@ def main():
     print(f'Cleaning {colors.GREEN}Downloads{colors.ENDC} folder...')
     for filename in zips:
         os.remove(filename)
+    print(f'Complete... \n{colors.GREEN}Script completed successfully!{colors.ENDC}')
 
 def get_download_path():
     # Just for the record, this is needlessly complicated
@@ -128,8 +128,7 @@ def get_addon_path():
         if os.path.exists(wow_addon_path):
             return wow_addon_path
         else:
-            print(f'{colors.FAIL}Error!{colors.ENDC}')
-            print(f'{wow_addon_path} does not exist! Ensure you have run World of Warcraft at least once to generate the folder structure.')
+            print(f'{colors.FAIL}Error!{colors.ENDC} {wow_addon_path} does not exist!\nEnsure you have run World of Warcraft at least once to generate the folder structure.')
 
         return wow_addon_path
     else:
