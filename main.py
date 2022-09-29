@@ -36,7 +36,7 @@ def main():
     webbrowser.open_new('file://' + os.path.realpath('splash.html'))
 
     # logic for determining system type and assigning
-    # correct download directory on Mac & Windows
+    # correct default download directory on Mac & Windows
     dl_dir = get_download_path()
     print(f'Using default Firefox download directory at {colors.GREEN}{dl_dir}{colors.ENDC}')
 
@@ -52,6 +52,8 @@ def main():
     for filename in os.listdir(dl_dir):
         dl_dir_count += 1
 
+    # Target number of files/folders in Downloads directory equals (number of items)
+    # currently in the folder plus the (number of items in url_list.txt)
     dl_dir_target = dl_dir_count + len(url_list)
 
     ##############
@@ -137,7 +139,7 @@ def get_addon_path():
             return wow_addon_path
         else:
             print(f'{colors.FAIL}Error!{colors.ENDC}')
-            print(f'{colors.BOLD}{wow_addon_path}{colors.ENDC} does not exist! Ensure you have run World of Warcraft at least once to generate the folder structure.')
+            print(f'{colors.BOLD}{wow_addon_path}{colors.ENDC} does not exist! Ensure you have run World of Warcraft and logged into a character at least once to generate the required folder structure.')
             print(f'{colors.FAIL}Quitting!{colors.ENDC}')
             quit()
 
