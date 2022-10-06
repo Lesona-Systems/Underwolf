@@ -101,14 +101,17 @@ def main():
     except Exception:
         print(f'{colors.FAIL}Error during folder move process...{colors.ENDC}')
 
-    print('Killing browser processes...')
-    os.system('taskkill /F /IM firefox.exe') # force kill running Firefox processes
+    kill_firefox()
 
     # remove downloaded addon zip files
     print(f'Cleaning {colors.GREEN}Downloads{colors.ENDC} folder...')
     for filename in zips:
         os.remove(filename)
     print(f'Complete... \n{colors.GREEN}Script completed successfully!{colors.ENDC}')
+
+def kill_firefox():
+    print('Killing browser processes...')
+    os.system('taskkill /F /IM firefox.exe')
 
 def get_download_path():
     # Just for the record, this is needlessly complicated
