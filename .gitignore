@@ -1,3 +1,5 @@
 .DS_Store
 venv
 version_checking.py
+
+geckodriver.log
