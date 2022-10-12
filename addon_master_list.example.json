@@ -1,0 +1,92 @@
+{
+    "DBM" : {
+        "curseforge" : 1,
+        "anchor_link" : "https://www.curseforge.com/wow/addons/deadly-boss-mods",
+        "dl_url" : "https://www.curseforge.com/wow/addons/deadly-boss-mods/download",
+        "last_updated" : ""
+    },
+
+    "DBM-DUNGEONS" : {
+        "curseforge" : 1,
+        "anchor_link" : "https://www.curseforge.com/wow/addons/deadly-boss-mods-dbm-dungeons",
+        "dl_url" : "https://www.curseforge.com/wow/addons/deadly-boss-mods-dbm-dungeons/download",
+        "last_updated" : ""
+    },
+
+    "DETAILS" : {
+        "curseforge" : 1,
+        "anchor_link" : "https://www.curseforge.com/wow/addons/details/download",
+        "dl_url" : "https://www.curseforge.com/wow/addons/details/download",
+        "last_updated" : ""
+    },
+
+    "WEAKAURAS2" : {
+        "curseforge" : 1,
+        "anchor_link" : "https://www.curseforge.com/wow/addons/weakauras-2",
+        "dl_url" : "https://www.curseforge.com/wow/addons/weakauras-2/download",
+        "last_updated" : ""
+        },
+
+    "RARESCANNER" : {
+        "curseforge" : 1,
+        "anchor_link" : "https://www.curseforge.com/wow/addons/rarescanner",
+        "dl_url" : "https://www.curseforge.com/wow/addons/rarescanner/download",
+        "last_updated" : ""
+    },
+
+    "PAWN" : {
+        "curseforge" : 1,
+        "anchor_link" : "https://www.curseforge.com/wow/addons/pawn",
+        "dl_url" : "https://www.curseforge.com/wow/addons/pawn/download",
+        "last_updated" : ""
+    },
+
+    "HANDYNOTES" : {
+        "curseforge" : 1,
+        "anchor_link" : "https://www.curseforge.com/wow/addons/handynotes",
+        "dl_url" : "https://www.curseforge.com/wow/addons/handynotes/download",
+        "last_updated" : ""
+    },
+
+    "ALLTHETHINGS" : {
+        "curseforge" : 1,
+        "anchor_link" : "https://www.curseforge.com/wow/addons/all-the-things",
+        "dl_url" : "https://www.curseforge.com/wow/addons/all-the-things/download",
+        "last_updated" : ""
+    },
+
+    "HANDYNOTES_SL" : {
+        "curseforge" : 1,
+        "anchor_link" : "https://www.curseforge.com/wow/addons/handynotes-shadowlands",
+        "dl_url" : "https://www.curseforge.com/wow/addons/handynotes-shadowlands/download",
+        "last_updated" : ""
+    },
+
+    "SIMULATIONCRAFT" : {
+        "curseforge" : 1,
+        "anchor_link" : "https://www.curseforge.com/wow/addons/simulationcraft",
+        "dl_url" : "https://www.curseforge.com/wow/addons/simulationcraft/download",
+        "last_updated" : ""
+    },
+
+    "ELVUI" : {
+        "curseforge" : 0,
+        "anchor_link" : "",
+        "dl_url" : "https://www.tukui.org/downloads/elvui-12.91.zip",
+        "last_updated" : ""
+    },
+
+    "TSM" : {
+        "curseforge" : 0,
+        "anchor_link" : "",
+        "dl_url" : "https://www.tradeskillmaster.com/download/TradeSkillMaster.zip",
+        "last_updated" : ""
+    },
+
+    "TSM_HELPER" : {
+        "curseforge" : 0,
+        "anchor_link" : "",
+        "dl_url" : "https://www.tradeskillmaster.com/download/TradeSkillMaster_AppHelper.zip",
+        "last_updated" : ""
+    }
+}

@@ -1,5 +1,7 @@
 .DS_Store
 venv
 
+geckodriver.exe
 geckodriver.log
+addon_master_list.json
 backup_list.json
