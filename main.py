@@ -8,7 +8,10 @@
 # software for any purpose.  It is provided "as is" without express or
 # implied warranty.
 
-import os, zipfile, webbrowser, shutil
+import os, zipfile, webbrowser, shutil, json
+from selenium import webdriver
+from selenium.webdriver import Firefox, FirefoxOptions
+from selenium.webdriver.common.by import By
 from time import sleep, time
 
 class colors:
@@ -22,18 +25,39 @@ def main():
     # get current epoch for dl time comparison (so we know which files to unzip)
     now = time()
 
+    master_list = 'addon_master_list.json'
     # parse url_list.txt
-    try:
-        if os.path.exists('url_list.txt'):
-            with open('url_list.txt', 'r') as f:
-                url_list = f.read().splitlines()
-    except FileNotFoundError:
-        print(f'{colors.FAIL}ERROR!{colors.ENDC} {colors.BOLD}url_list.txt{colors.ENDC} not found! \n Please create url_list.txt and populate it with desired addon download urls.')
+    if os.path.exists('addon_master_list.json'):
+        make_backup(master_list, 'backup_list.json')
+    else:
+        print(f'{colors.FAIL}ERROR!{colors.ENDC} {colors.BOLD}addon_master_list.json{colors.ENDC} not found! \n Please check documentation at https://github.com/Lesona-Systems/Underwolf')
         print(f'{colors.FAIL}Quitting!{colors.ENDC}')
         quit()
 
-    # open a new webbrowser, using splash.html page as an anchor for new tabs
-    webbrowser.open_new('file://' + os.path.realpath('splash.html'))
+    with open(master_list) as master:
+        addon_dict = json.load(master)
+
+    url_list = []
+    to_be_updated = []
+
+    for key in addon_dict.keys():
+        name = addon_dict[key]
+        if name['curseforge'] == 1:
+            print(f'Processing {key}...')
+            current_version_time = get_version(name['anchor_link'])
+            if current_version_time != name['last_updated']:
+                url_list.append(name['dl_url'])
+                to_be_updated.append(name)
+                name['last_updated'] = current_version_time
+            else:
+                continue
+        else:
+            print(f'Processing {key}...')
+            url_list.append(name['dl_url'])
+            to_be_updated.append(name)
+
+    print(f'{colors.GREEN}The following addons will be updated:{colors.ENDC}')
+    print(to_be_updated)
 
     # logic for determining system type and assigning
     # correct default download directory on Mac & Windows
@@ -92,7 +116,7 @@ def main():
         with zipfile.ZipFile(filename,'r') as zipped_file:
             zipped_file.extractall(dl_dir_addons)
 
-    addon_path = get_addon_path()
+    addon_path = get_addon_path(zips)
 
     # move addon temp dir and overwrite WoW addon dir
     try:
@@ -100,18 +124,36 @@ def main():
         shutil.move(dl_dir_addons, addon_path)
     except Exception:
         print(f'{colors.FAIL}Error during folder move process...{colors.ENDC}')
+        clean_downloads(zips)
+        shutil.rmtree(dl_dir_addons)
 
     kill_firefox()
-
     # remove downloaded addon zip files
-    print(f'Cleaning {colors.GREEN}Downloads{colors.ENDC} folder...')
-    for filename in zips:
-        os.remove(filename)
+    clean_downloads(zips)
+
+    update_master(addon_dict, master_list)
+
     print(f'Complete... \n{colors.GREEN}Script completed successfully!{colors.ENDC}')
+
+def update_master(dict, file):
+    with open(file, 'w') as json_file:
+        json.dump(dict, file, indent=4)
+
+def make_backup(file, file2):
+    shutil.copy(file, file2)
 
 def kill_firefox():
     print('Killing browser processes...')
-    os.system('taskkill /F /IM firefox.exe')
+    if os.name == 'nt':
+        os.system('taskkill /F /IM firefox.exe /T')
+    else:
+        os.system('pkill -f firefox')
+    
+
+def clean_downloads(list):
+    print(f'Cleaning {colors.GREEN}Downloads{colors.ENDC} folder...')
+    for filename in list:
+        os.remove(filename)
 
 def get_download_path():
     # Just for the record, this is needlessly complicated
@@ -127,13 +169,15 @@ def get_download_path():
         return os.path.join(os.path.expanduser('~'), 'Downloads')
 
 # these addon paths are default install paths for World of Warcraft
-def get_addon_path():
+def get_addon_path(list):
     if os.name == 'nt':
         wow_addon_path = 'C:\Program Files (x86)\World of Warcraft\_retail_\Interface\AddOns'
         if os.path.exists(wow_addon_path):
             return wow_addon_path
         else:
             print(f'{colors.FAIL}Error!{colors.ENDC} {wow_addon_path} does not exist!\nEnsure you have run World of Warcraft at least once to generate the folder structure.')
+            clean_downloads(list)
+            kill_firefox()
 
         return wow_addon_path
     else:
@@ -144,7 +188,28 @@ def get_addon_path():
             print(f'{colors.FAIL}Error!{colors.ENDC}')
             print(f'{colors.BOLD}{wow_addon_path}{colors.ENDC} does not exist! Ensure you have run World of Warcraft and logged into a character at least once to generate the required folder structure.')
             print(f'{colors.FAIL}Quitting!{colors.ENDC}')
+            clean_downloads(list)
+            kill_firefox()
             quit()
+
+def get_version(url):
+
+    opts = FirefoxOptions()
+    opts.add_argument('--headless')
+    browser = webdriver.Firefox(options=opts)
+    uBlock = "/Users/nick/Library/Application Support/Firefox/Profiles/wr8z2mm6.default-release/extensions/uBlock0@raymondhill.net.xpi"
+
+    browser.install_addon(uBlock, temporary=True)
+
+    browser.get(url)
+
+    xpath = browser.find_element(By.XPATH, "//abbr[@class='tip standard-date standard-datetime']")
+    last_updated = xpath.get_attribute("data-epoch")
+    
+    browser.close()
+
+    return last_updated
+
 
 if __name__ == '__main__':
     main()
