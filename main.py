@@ -54,7 +54,7 @@ def main():
         else:
             print(f'Processing {key}...')
             url_list.append(name['dl_url'])
-            to_be_updated.append(name)
+            to_be_updated.append(key)
 
     print(f'{colors.GREEN}The following addons will be updated:{colors.ENDC}')
     print(to_be_updated)
