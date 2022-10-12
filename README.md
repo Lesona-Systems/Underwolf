@@ -38,7 +38,24 @@ The script uses Selenium and built-in Python libraries - you must have the [Fire
 
 Note that the script calls **taskkill** on all Firefox processes at the end to clean up. Chrome implementation is planned for a later version (Although that may become obsolete with Manifest V3 and its effect on ad blockers).
 
+### Add addons to addons_master_list.json
 
+Add addons to addon_master_list.example.json like so:
+
+    {
+    "DBM" : {
+        "curseforge" : 1, # int 1 for CurseForge addon, 0 for a direct download addon outside of CF (such as ElvUI)
+        "anchor_link" : "https://www.curseforge.com/wow/addons/deadly-boss-mods", # landing page for CF mods (not needed for direct download addons)
+        "dl_url" : "https://www.curseforge.com/wow/addons/deadly-boss-mods/download", # download page (required for all addons)
+        "last_updated" : "" # leave blank. The script will populate this field on first run.
+    },
+
+Rename 
+    addon_master_list_example.json
+to
+    addon_master_list.json
+
+The script will also backup the list at the beginning of each run just in case something goes wrong.
 
 ## Copyright © 2022 Nicholas Johnson
 
