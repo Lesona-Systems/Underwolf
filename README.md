@@ -2,9 +2,9 @@
 
 ## Pull Requests are not only welcomed, they're encouraged.
 
-Underwolf is my best answer to updating my World of Warcraft addons after the retirement of the CurseForge API (staying away from the CurseForge application). 
+Underwolf is my best answer to updating my World of Warcraft addons, both on and off CurseForge after the retirement of the CurseForge API (staying away from the CurseForge application). 
 
-It utilizes Python's built-in webbrowser library to navigate to [CurseForge](https://www.curseforge.com/) download pages (as well as other direct download URLs, such as [Tukui](https://www.tukui.org) and [Trade Skill Master](https://www.tradeskillmaster.com/)) and download the specified addons (listed, one per line, in [url_list.txt](https://github.com/Lesona-Systems/Underwolf/blob/main/url_list.txt)), unzip them, and move them into the WoW addon folder.
+It utilizes Python's built-in webbrowser library to navigate to [CurseForge](https://www.curseforge.com/) download pages (as well as other direct download URLs, such as [Tukui](https://www.tukui.org) and [Trade Skill Master](https://www.tradeskillmaster.com/)) and download the specified addons (listed, one per line, in [url_list.txt](https://github.com/Lesona-Systems/Underwolf/blob/main/url_list.txt)), unzip them, and move them into the WoW addon folder. The script also uses Selenium for version checking.
 
 ## Requirements
 
@@ -12,13 +12,11 @@ The script currently **requires [Firefox](https://www.mozilla.org/en-US/firefox/
 
 **Without uBlock Origin, the script will not work.**
 
-Other than that, the script only uses built-in Python libraries.
+Other than that, the script only uses Selenium and built-in Python libraries.
 
-**Underwolf currently has no addon version checking.** The script will redownload every addon each time it is run. This isn't ideal. I've found it worth logging in and seeing if any priority addons need updating and running then deciding whether or not to run the script. Version checking is a priority for future releases. 
+Note that the script calls **taskkill** on all Firefox processes at the end to clean up. Chrome implementation is planned for a later version (Although that may become obsolete with Manifest V3 and its effect on ad blockers).
 
-Note that the script calls **taskkill** on Firefox process at the end to clean up. It will close any open Firefox processes when called. Chrome implementation is planned for a later version (Although that may become obsolete with Manifest V3 and its effect on ad blockers).
-
-Tested on **MacOS Ventura v13.0 Beta (22A5352e)** and **Windows 11 (Stable)** using **Firefox 104.0.2** with **uBlockOrigin 1.44.4** as of September 22, 2022. Tested on Python v3.10.6, but should work with Python v3.x.x.
+Tested on **MacOS Ventura v13.0 Beta (22A5352e)** and **Windows 11 (Stable)** using **Firefox 104.0.2** with **uBlockOrigin 1.44.4**. Tested on Python 3.10.6, but should work with Python 3.5+.
 
 ## Copyright © 2022 Nicholas Johnson
 
