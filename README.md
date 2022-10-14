@@ -26,7 +26,7 @@ On Mac:
 
     /Users/user/Library/Application Support/Firefox/Profiles/RANDOMSTRING.default-release/extensions/uBlock0@raymondhill.net.xpi
 
-main.py is currently populated with my personal path. You must make the above changes for the script to successfully execute.
+main.py is currently populated with my personal path. You must make the above changes in line 222 (For Windows) or line 224 (for Mac) for the script to successfully execute.
 
 **Without uBlock Origin and the above change, the script will not work.**
 
@@ -53,7 +53,7 @@ Rename
 to
     addon_master_list.json
 
-The script will also backup the list at the beginning of each run just in case something goes wrong.
+The script will also backup the master addon list at the beginning of each run.
 
 ## Copyright © 2022 Nicholas Johnson
 
