@@ -54,7 +54,7 @@ def main():
         else:
             print(f'Processing {key}...')
             url_list.append(name['dl_url'])
-            to_be_updated.append(name)
+            to_be_updated.append(key)
 
     print(f'{colors.GREEN}The following addons will be updated:{colors.ENDC}')
     print(to_be_updated)
@@ -127,8 +127,8 @@ def main():
         clean_downloads(zips)
         shutil.rmtree(dl_dir_addons)
 
+
     kill_firefox()
-    # remove downloaded addon zip files
     clean_downloads(zips)
 
     update_master(addon_dict, master_list)
@@ -137,7 +137,7 @@ def main():
 
 def update_master(dict, file):
     with open(file, 'w') as json_file:
-        json.dump(dict, file, indent=4)
+        json.dump(dict, json_file, indent=4)
 
 def make_backup(file, file2):
     shutil.copy(file, file2)
@@ -176,9 +176,8 @@ def get_addon_path(list):
             return wow_addon_path
         else:
             print(f'{colors.FAIL}Error!{colors.ENDC} {wow_addon_path} does not exist!\nEnsure you have run World of Warcraft at least once to generate the folder structure.')
-            clean_downloads(list)
             kill_firefox()
-
+            clean_downloads(list)
         return wow_addon_path
     else:
         wow_addon_path = '/Applications/World of Warcraft/_retail_/Interface/Addons'
@@ -197,17 +196,19 @@ def get_version(url):
     opts = FirefoxOptions()
     opts.add_argument('--headless')
     browser = webdriver.Firefox(options=opts)
-    uBlock = "/Users/nick/Library/Application Support/Firefox/Profiles/wr8z2mm6.default-release/extensions/uBlock0@raymondhill.net.xpi"
 
-    browser.install_addon(uBlock, temporary=True)
+    if os.name == 'nt':
+        uBlock = r'C:\Users\NEJWr\AppData\Roaming\Mozilla\Firefox\Profiles\p9hju3lr.default-release\extensions\uBlock0@raymondhill.net.xpi'
+    else:
+        uBlock = '/Users/nick/Library/Application Support/Firefox/Profiles/wr8z2mm6.default-release/extensions/uBlock0@raymondhill.net.xpi'
 
+    browser.install_addon(uBlock)
     browser.get(url)
 
     xpath = browser.find_element(By.XPATH, "//abbr[@class='tip standard-date standard-datetime']")
     last_updated = xpath.get_attribute("data-epoch")
     
     browser.close()
-
     return last_updated
 
 
