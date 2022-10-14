@@ -26,20 +26,28 @@ def main():
     now = time()
 
     master_list = 'addon_master_list.json'
-    # parse url_list.txt
+    # check for addon_master_list.json. If it exists, back it up to backup_list.json. If not, throw error.
     if os.path.exists('addon_master_list.json'):
         make_backup(master_list, 'backup_list.json')
     else:
-        print(f'{colors.FAIL}ERROR!{colors.ENDC} {colors.BOLD}addon_master_list.json{colors.ENDC} not found! \n Please check documentation at https://github.com/Lesona-Systems/Underwolf')
+        print(f'{colors.FAIL}ERROR!{colors.ENDC} {colors.BOLD}addon_master_list.json{colors.ENDC} not found!')
+        print('\n Please check documentation at https://github.com/Lesona-Systems/Underwolf')
         print(f'{colors.FAIL}Quitting!{colors.ENDC}')
         quit()
 
+    # read addon list to dict
     with open(master_list) as master:
         addon_dict = json.load(master)
 
+    # initialize empty lists for addons and feedback
     url_list = []
     to_be_updated = []
 
+    # read addon keys into dict. For each CF addon, call get_version() and
+    # compare to version in addon_master_list. If it's the same, move on.
+    # If we've got different last_updated times, push addon to url_list[].
+    # Suprisingly, let's thank CF for tracking "last updated" in Unix time
+    # in its front end so I don't have to do any conversions. :)
     for key in addon_dict.keys():
         name = addon_dict[key]
         if name['curseforge'] == 1:
@@ -56,11 +64,11 @@ def main():
             url_list.append(name['dl_url'])
             to_be_updated.append(key)
 
+    # let user know which addons we're updating because feedback is nice
     print(f'{colors.GREEN}The following addons will be updated:{colors.ENDC}')
     print(to_be_updated)
 
-    # logic for determining system type and assigning
-    # correct default download directory on Mac & Windows
+    # determine system type and assign correct download directory
     dl_dir = get_download_path()
     print(f'Using default Firefox download directory at {colors.GREEN}{dl_dir}{colors.ENDC}')
 
@@ -69,9 +77,10 @@ def main():
     else:
         dl_dir_addons = os.path.join(dl_dir, 'Addons')
 
-    # Set variables for current file count and target file count
-    # (so we can error check) & count number of files in Download
-    # directory before url_list downloads
+    # Intialize dl_dir_count to count number of files currently in Download directory
+    # so we can "guess" when we're done. I haven't found a way to detect the difference
+    # between an incomplete file download and a complete one. Neither Selenium nor Python's
+    # built in webbrowser have this built in.
     dl_dir_count = 0
     for filename in os.listdir(dl_dir):
         dl_dir_count += 1
@@ -86,7 +95,8 @@ def main():
     # message and susequent (n) second wait time. We sleep for (2) 
     # seconds to wait until the download starts, a feature I'm
     # assuming has to do with requiring browser tabs to be in focus
-    # to start a download.
+    # to start a download. We can go ahead and increase this sleep
+    # time if users are on a slow connection. 
     #############
 
     # open each download page to trigger the download
@@ -99,10 +109,12 @@ def main():
 
     zips = []
 
-    # For files in dl_dir, if the file's last-modified timestamp is later
+    # For files in dl_dir, if the file's "last-modified" timestamp is later
     # than the timestamp recorded when we ran the script, assume those
-    # files are the addons we just downloaded. I acknowledge that it's
-    # bad logic. I'm working on it.
+    # files are the addons we just downloaded. We're going to run into problems
+    # if there are other downloads in Firefox/other browsers ongoing at the same
+    # time. Maybe let's not do that? Add a warning to script start?
+
     if dl_dir_count == dl_dir_target:
         for filename in os.listdir(dl_dir):
             full_path = os.path.join(dl_dir, filename)
@@ -111,7 +123,7 @@ def main():
             else:
                 continue
 
-    # extract each addon to temp addon directory
+    # extract each addon to temp addon directory in default download dir
     for filename in zips:
         with zipfile.ZipFile(filename,'r') as zipped_file:
             zipped_file.extractall(dl_dir_addons)
@@ -119,6 +131,10 @@ def main():
     addon_path = get_addon_path(zips)
 
     # move addon temp dir and overwrite WoW addon dir
+    # in the except block, we've gone back and forth over whether to clean up the downloaded
+    # files and the unzipped addons folder. If we've gotten this far, it seems dumb to delete
+    # everything we've just downloaded. On the other hand, a graceful failure should leave the
+    # system in the same state before it ran. Problem for another day.
     try:
         shutil.rmtree(addon_path)
         shutil.move(dl_dir_addons, addon_path)
@@ -128,11 +144,11 @@ def main():
         shutil.rmtree(dl_dir_addons)
 
 
+    # Final cleanup and indicator of successful run
     kill_firefox()
     clean_downloads(zips)
-
+    # update addon_master_list.json with up-to-date "last_updated" timestamps
     update_master(addon_dict, master_list)
-
     print(f'Complete... \n{colors.GREEN}Script completed successfully!{colors.ENDC}')
 
 def update_master(dict, file):
@@ -143,6 +159,7 @@ def make_backup(file, file2):
     shutil.copy(file, file2)
 
 def kill_firefox():
+    '''Kill all Firefox browser processes'''
     print('Killing browser processes...')
     if os.name == 'nt':
         os.system('taskkill /F /IM firefox.exe /T')
@@ -151,11 +168,14 @@ def kill_firefox():
     
 
 def clean_downloads(list):
+    '''For filename in list, delete the file.'''
     print(f'Cleaning {colors.GREEN}Downloads{colors.ENDC} folder...')
     for filename in list:
         os.remove(filename)
 
 def get_download_path():
+    '''Determine system type: Windows or MacOS. For Windows, get the Downloads folder GUID from the registry.
+        For MacOS, simple expand os.path using os.path.expanduser and join with "Downloads"'''
     # Just for the record, this is needlessly complicated
     # https://stackoverflow.com/questions/35851281/python-finding-the-users-downloads-folder
     if os.name == 'nt':
@@ -175,7 +195,8 @@ def get_addon_path(list):
         if os.path.exists(wow_addon_path):
             return wow_addon_path
         else:
-            print(f'{colors.FAIL}Error!{colors.ENDC} {wow_addon_path} does not exist!\nEnsure you have run World of Warcraft at least once to generate the folder structure.')
+            print(f'{colors.FAIL}Error!{colors.ENDC} {wow_addon_path} does not exist!')
+            print('\nEnsure you have run World of Warcraft at least once to generate the folder structure.')
             kill_firefox()
             clean_downloads(list)
         return wow_addon_path
