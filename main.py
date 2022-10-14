@@ -10,7 +10,7 @@
 
 import os, zipfile, webbrowser, shutil, json
 from selenium import webdriver
-from selenium.webdriver import Firefox, FirefoxOptions
+from selenium.webdriver import FirefoxOptions
 from selenium.webdriver.common.by import By
 from time import sleep, time
 
