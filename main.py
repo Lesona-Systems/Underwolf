@@ -47,7 +47,7 @@ def main():
     # compare to version in addon_master_list. If it's the same, move on.
     # If we've got different last_updated times, push addon to url_list[].
     # Suprisingly, let's thank CF for tracking "last updated" in Unix time
-    # in its front end so I don't have to do any conversions. :)
+    # in its front end so we don't have to do any conversions. :)
     for key in addon_dict.keys():
         name = addon_dict[key]
         if name['curseforge'] == 1:
@@ -174,8 +174,9 @@ def clean_downloads(list):
         os.remove(filename)
 
 def get_download_path():
-    '''Determine system type: Windows or MacOS. For Windows, get the Downloads folder GUID from the registry.
-        For MacOS, simple expand os.path using os.path.expanduser and join with "Downloads"'''
+    '''Determine system type: Windows or MacOS. For Windows, get the Downloads folder GUID from the registry and
+        programatically get the "Downloads" path. For MacOS, simple expand os.path using os.path.expanduser and 
+        join with "Downloads"'''
     # Just for the record, this is needlessly complicated
     # https://stackoverflow.com/questions/35851281/python-finding-the-users-downloads-folder
     if os.name == 'nt':
