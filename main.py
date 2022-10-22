@@ -1,4 +1,3 @@
-import configparser
 import os
 import zipfile
 import webbrowser
@@ -22,7 +21,7 @@ def main():
     now = time()
 
     master_list = 'addon_master_list.json'
-    # check for addon_master_list.json. If it exists, back it up to backup_list.json. If not, throw error.
+    # check for addon_master_list.json. If it exists, back it up to backup_list.json. If not, 'throw' error.
     if os.path.exists('addon_master_list.json'):
         make_backup(master_list, 'backup_list.json')
     else:
