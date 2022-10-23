@@ -64,15 +64,18 @@ def main():
     # in its front end so we don't have to do any conversions. :)
     for key in addon_dict.keys():
         name = addon_dict[key]
-        if name['curseforge'] == 1:
+        if name['location'] == 'cf':
             print(f'Processing {key}...')
-            current_version_time = get_version(name['anchor_link'], ublock_xpi_path)
+            current_version_time = get_version_curseforge(name['anchor_link'], ublock_xpi_path)
             if current_version_time != name['last_updated']:
                 url_list.append(name['dl_url'])
                 to_be_updated.append(name)
                 name['last_updated'] = current_version_time
             else:
                 continue
+        elif name['location'] == 'tukui':
+            print(f'Processing {key}...')
+            current_version_time = get_version_tukui(name['anchor_link'], ublock_xpi_path)
         else:
             print(f'Processing {key}...')
             url_list.append(name['dl_url'])
@@ -212,8 +215,8 @@ def get_addon_path(addon_list, wow_addon_directory):
         else:
             print(f'{colors.FAIL}Error!{colors.ENDC} {wow_addon_path} does not exist!')
             print(f'Ensure you have run World of Warcraft and logged into a character at least once to generate the required folder structure.')
-            kill_firefox()
             clean_downloads(addon_list)
+            kill_firefox()
             quit()
         return wow_addon_path
     else:
@@ -228,11 +231,15 @@ def get_addon_path(addon_list, wow_addon_directory):
             kill_firefox()
             quit()
 
-def get_version(url, ublock_xpi_path):
-
+def start_browser():
     opts = FirefoxOptions()
     opts.add_argument('--headless')
     browser = webdriver.Firefox(options=opts)
+    return browser
+    
+def get_version_curseforge(url, ublock_xpi_path):
+
+    browser = start_browser()
 
     if os.name == 'nt':
         ublock = fr"{ublock_xpi_path}"
@@ -244,10 +251,26 @@ def get_version(url, ublock_xpi_path):
 
     xpath = browser.find_element(By.XPATH, "//abbr[@class='tip standard-date standard-datetime']")
     last_updated = xpath.get_attribute("data-epoch")
-    
     browser.close()
+
     return last_updated
 
+def get_version_tukui(url, ublock_xpi_path):
+    browser = start_browser()
+
+    if os.name == 'nt':
+        ublock = fr"{ublock_xpi_path}"
+    else:
+        ublock = ublock_xpi_path
+
+    browser.install_addon(ublock)
+    browser.get(url)
+
+    xpath = browser.find_element(By.XPATH, "//b[@class='Premium']")
+    last_updated = xpath.get_attribute("data-epoch")
+    browser.close()
+
+    return last_updated
 
 if __name__ == '__main__':
     main()
