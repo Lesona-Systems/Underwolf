@@ -14,7 +14,7 @@ class colors:
     FAIL = '\033[91m'
     ENDC = '\033[0m'
     BOLD = '\033[1m'
-    UNDERLINE = '\033[4m'
+
 
 def main():
     # get current epoch for dl time comparison (so we know which files to unzip)
