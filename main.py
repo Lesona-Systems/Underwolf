@@ -267,7 +267,7 @@ def get_version_tukui(url, ublock_xpi_path):
     browser.get(url)
 
     xpath = browser.find_element(By.XPATH, "//b[@class='Premium']")
-    last_updated = xpath.get_attribute("data-epoch")
+    last_updated = xpath.text
     browser.close()
 
     return last_updated
