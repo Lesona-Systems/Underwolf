@@ -133,7 +133,7 @@ def main():
     # in the except block, we've gone back and forth over whether to clean up the downloaded
     # files and the unzipped addons folder. If we've gotten this far, it seems dumb to delete
     # everything we've just downloaded. On the other hand, a graceful failure should leave the
-    # system in the same state before it ran. Problem for another day.
+    # system in the same state as it was before it ran. Problem for another day.
     try:
         shutil.rmtree(addon_path)
         shutil.move(dl_dir_addons, addon_path)
