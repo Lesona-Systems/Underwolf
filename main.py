@@ -38,9 +38,9 @@ def main():
     ublock_xpi_path = config['paths']['ublock_xpi_path']
 
 
-    master_list = 'addon_master_list.json'
+    master_list = 'addon_test_list.json'
     # check for addon_master_list.json. If it exists, back it up to backup_list.json. If not, throw error.
-    if os.path.exists('addon_master_list.json'):
+    if os.path.exists('addon_test_list.json'):
         make_backup(master_list, 'backup_list.json')
     else:
         print(f'{colors.FAIL}ERROR!{colors.ENDC} {colors.BOLD}addon_master_list.json{colors.ENDC} not found!')
@@ -79,7 +79,7 @@ def main():
         else:
             print(f'Processing {key}...')
             url_list.append(name['dl_url'])
-            to_be_updated.append(key)
+            to_be_updated.append(name)
 
     # let user know which addons we're updating because feedback is nice
     print(f'{colors.GREEN}The following addons will be updated:{colors.ENDC}')
@@ -122,7 +122,7 @@ def main():
         webbrowser.open_new_tab(url)
         sleep(2)
         dl_dir_count += 1
-    sleep(2) # Wait for two more seconds and hope downloads are finished
+    sleep(5) # Default is 2 for fast connections (over 25MBs) Wait for two more seconds and hope downloads are finished
 
     addon_zips = []
 
@@ -210,7 +210,7 @@ def get_download_path(path):
 
 def get_addon_path(addon_list, wow_addon_directory):
     if os.name == 'nt':
-        if os.path.exists(wow_addon_path):
+        if os.path.isdir(wow_addon_path):
             return wow_addon_path
         else:
             print(f'{colors.FAIL}Error!{colors.ENDC} {wow_addon_path} does not exist!')
@@ -220,7 +220,7 @@ def get_addon_path(addon_list, wow_addon_directory):
             quit()
         return wow_addon_path
     else:
-        if os.path.exists(wow_addon_directory):
+        if os.path.isdir(wow_addon_directory):
             return wow_addon_directory
         else:
             print(f'{colors.FAIL}Error!{colors.ENDC}')
@@ -242,6 +242,7 @@ def get_version_curseforge(url, ublock_xpi_path):
     browser = start_browser()
 
     if os.name == 'nt':
+        # Windows panics if we don't pass this as a raw string
         ublock = fr"{ublock_xpi_path}"
     else:
         ublock = ublock_xpi_path
