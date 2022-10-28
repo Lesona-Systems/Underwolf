@@ -60,8 +60,12 @@ def main():
             to_be_updated.append(key)
 
     # let user know which addons we're updating because feedback is nice
-    print(f'{colors.GREEN}The following addons will be updated:{colors.ENDC}')
-    print(to_be_updated)
+    if len(to_be_updated) > 0:
+        print(f'{colors.GREEN}The following addons will be updated:{colors.ENDC}')
+        print(to_be_updated)
+    else:
+        print(f'All World of Warcraft addons {colors.GREEN}up-to-date!{colors.ENDC}')
+        quit()
 
     # determine system type and assign correct download directory
     dl_dir = get_download_path()
