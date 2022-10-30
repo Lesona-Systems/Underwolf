@@ -38,9 +38,9 @@ def main():
     ublock_xpi_path = config['paths']['ublock_xpi_path']
 
 
-    master_list = 'addon_test_list.json'
+    master_list = 'addon_master_list.json'
     # check for addon_master_list.json. If it exists, back it up to backup_list.json. If not, throw error.
-    if os.path.exists('addon_test_list.json'):
+    if os.path.exists('addon_master_list.json'):
         make_backup(master_list, 'backup_list.json')
     else:
         print(f'{colors.FAIL}ERROR!{colors.ENDC} {colors.BOLD}addon_master_list.json{colors.ENDC} not found!')
@@ -73,9 +73,9 @@ def main():
                 name['last_updated'] = current_version_time
             else:
                 continue
-        elif name['location'] == 'tukui':
-            print(f'Processing {key}...')
-            current_version_time = get_version_tukui(name['anchor_link'], ublock_xpi_path)
+        # elif name['location'] == 'tukui':
+        #     print(f'Processing {key}...')
+        #     current_version_time = get_version_tukui(name['anchor_link'], ublock_xpi_path)
         else:
             print(f'Processing {key}...')
             url_list.append(name['dl_url'])
@@ -210,10 +210,10 @@ def get_download_path(path):
 
 def get_addon_path(addon_list, wow_addon_directory):
     if os.name == 'nt':
-        if os.path.isdir(wow_addon_path):
-            return wow_addon_path
+        if os.path.isdir(wow_addon_directory):
+            return wow_addon_directory
         else:
-            print(f'{colors.FAIL}Error!{colors.ENDC} {wow_addon_path} does not exist!')
+            print(f'{colors.FAIL}Error!{colors.ENDC} {wow_addon_directory} does not exist!')
             print(f'Ensure you have run World of Warcraft and logged into a character at least once to generate the required folder structure.')
             clean_downloads(addon_list)
             kill_firefox()
