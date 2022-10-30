@@ -14,11 +14,29 @@ then activate the virtual environment and run
 
     pip install -r requirements.txt
 
-### Provide the path to uBlock Origin
+### Provide required paths in config.ini
+
+#### Download Directory
+
+Add the full path of your Firefox download directory to config.ini. For example:
+
+    firefox_download_directory = C:\Users\NEJWr\Downloads
+
+#### World of Warcraft Addon Directory
+
+Add the full path of your World of Warcraft Addon directory to config.ini. For example:
+
+    wow_addon_directory = C:\Program Files (x86)\World of Warcraft\_retail_\Interface\AddOns
+
+#### Ublock Origin
 
 The script currently **requires [Firefox](https://www.mozilla.org/en-US/firefox/new/) and [uBlock Origin](https://addons.mozilla.org/en-US/firefox/addon/ublock-origin/).** uBlock Origin "fast-forwards" the CurseForge imposed 5-second wait time (as well as other sites) before the download starts on the download pages. Additionally, it cuts the total amount of time for the script to execute by around half.
 
-In order to use uBlock Origin with Selenium, you'll have to provide the path to uBlock's .xpi file in the get_version() function at the bottom of main.py. On Windows, you can find Mozilla's extension folder here with a default installation (This will eventually be moved to an .ini):
+In order to use uBlock Origin with Selenium, you'll have to provide the path to uBlock's .xpi file in config.ini. For example:
+
+    ublock_xpi_path = C:\Users\NEJWr\AppData\Roaming\Mozilla\Firefox\Profiles\p9hju3lr.default-release\extensions\uBlock0@raymondhill.net.xpi
+
+On Windows, you can find Mozilla's extension folder here with a default installation:
 
     C:\Users\USER\AppData\Roaming\Mozilla\Firefox\Profiles\RANDOMSTRING.default-release\extensions\uBlock0@raymondhill.net.xpi
 
@@ -26,9 +44,9 @@ On Mac:
 
     /Users/user/Library/Application Support/Firefox/Profiles/RANDOMSTRING.default-release/extensions/uBlock0@raymondhill.net.xpi
 
-main.py is currently populated with my personal path. You must make the above changes in line 222 (For Windows) or line 224 (for Mac) for the script to successfully execute.
+config.ini is currently populated with an example path. You **must** provide a valid path to the .xpi file for the script to successfully execute.
 
-**Without uBlock Origin and the above change, the script will not work.**
+**The script will not work without uBlock Origin.**
 
 ### Install the geckodriver
 
@@ -42,7 +60,7 @@ Add addons to addon_master_list.example.json like so:
 
     {
     "DBM" : {
-        "curseforge" : 1, # int 1 for CurseForge addon, 0 for a direct download addon outside of CF (such as ElvUI)
+        "location" : "cf", # "cf" for a CurseForge addon, "tukui" for ElvUI, and "tsm" for TradeSkillMaster mods.
         "anchor_link" : "https://www.curseforge.com/wow/addons/deadly-boss-mods", # landing page for CF mods (not needed for direct download addons)
         "dl_url" : "https://www.curseforge.com/wow/addons/deadly-boss-mods/download", # download page (required for all addons)
         "last_updated" : "" # leave blank. The script will populate this field on first run.
