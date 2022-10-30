@@ -1,14 +1,3 @@
-# Copyright © 2022 Nicholas Johnson
-
-# Permission to use, copy, modify, distribute, and sell this software and its
-# documentation for any purpose is hereby granted without fee, provided that
-# the above copyright notice appear in all copies and that both that
-# copyright notice and this permission notice appear in supporting
-# documentation.  No representations are made about the suitability of this
-# software for any purpose.  It is provided "as is" without express or
-# implied warranty.
-
-import configparser
 import os
 import zipfile
 import webbrowser
@@ -39,7 +28,7 @@ def main():
 
 
     master_list = 'addon_master_list.json'
-    # check for addon_master_list.json. If it exists, back it up to backup_list.json. If not, throw error.
+    # check for addon_master_list.json. If it exists, back it up to backup_list.json. If not, 'throw' error.
     if os.path.exists('addon_master_list.json'):
         make_backup(master_list, 'backup_list.json')
     else:
@@ -82,8 +71,12 @@ def main():
             to_be_updated.append(name)
 
     # let user know which addons we're updating because feedback is nice
-    print(f'{colors.GREEN}The following addons will be updated:{colors.ENDC}')
-    print(to_be_updated)
+    if len(to_be_updated) > 0:
+        print(f'{colors.GREEN}The following addons will be updated:{colors.ENDC}')
+        print(to_be_updated)
+    else:
+        print(f'All World of Warcraft addons {colors.GREEN}up-to-date!{colors.ENDC}')
+        quit()
 
     # determine system type and assign correct download directory
     dl_dir = get_download_path(firefox_download_directory)
@@ -151,7 +144,7 @@ def main():
     # in the except block, I've gone back and forth over whether to clean up the downloaded
     # files and the unzipped addons folder. If we've gotten this far, it seems dumb to delete
     # everything we've just downloaded. On the other hand, a graceful failure should leave the
-    # system in the same state before it ran. Problem for another day.
+    # system in the same state as it was before it ran. Problem for another day.
     try:
         shutil.rmtree(addon_path)
         shutil.move(dl_dir_addons, addon_path)

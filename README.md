@@ -16,7 +16,7 @@ then activate the virtual environment and run
 
 ### Provide the path to uBlock Origin
 
-The script currently **requires [Firefox](https://www.mozilla.org/en-US/firefox/new/) and [uBlock Origin](https://addons.mozilla.org/en-US/firefox/addon/ublock-origin/).** uBlock Origin "fast-forwards" the CurseForge imposed 5-second wait time (as well as other sites) before the download starts on the download pages.
+The script currently **requires [Firefox](https://www.mozilla.org/en-US/firefox/new/) and [uBlock Origin](https://addons.mozilla.org/en-US/firefox/addon/ublock-origin/).** uBlock Origin "fast-forwards" the CurseForge imposed 5-second wait time (as well as other sites) before the download starts on the download pages. Additionally, it cuts the total amount of time for the script to execute by around half.
 
 In order to use uBlock Origin with Selenium, you'll have to provide the path to uBlock's .xpi file in the get_version() function at the bottom of main.py. On Windows, you can find Mozilla's extension folder here with a default installation (This will eventually be moved to an .ini):
 
