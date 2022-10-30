@@ -15,10 +15,17 @@ class colors:
     ENDC = '\033[0m'
     BOLD = '\033[1m'
 
-
 def main():
     # get current epoch for dl time comparison (so we know which files to unzip)
     now = time()
+
+    config = configparser.ConfigParser()
+    config.read('config.ini')
+
+    wow_addon_directory = config['paths']['wow_addon_directory']
+    firefox_download_directory = config['paths']['firefox_download_directory']
+    ublock_xpi_path = config['paths']['ublock_xpi_path']
+
 
     master_list = 'addon_master_list.json'
     # check for addon_master_list.json. If it exists, back it up to backup_list.json. If not, 'throw' error.
@@ -40,24 +47,28 @@ def main():
 
     # read addon keys into dict. For each CF addon, call get_version() and
     # compare to version in addon_master_list. If it's the same, move on.
-    # If we've got different last_updated times, push addon to url_list[].
+    # If we've got different last_updated times, push addon to url_list[]
+    # and update last_updated in addon_list.json.
     # Suprisingly, let's thank CF for tracking "last updated" in Unix time
     # in its front end so we don't have to do any conversions. :)
     for key in addon_dict.keys():
         name = addon_dict[key]
-        if name['curseforge'] == 1:
+        if name['location'] == 'cf':
             print(f'Processing {key}...')
-            current_version_time = get_version(name['anchor_link'])
+            current_version_time = get_version_curseforge(name['anchor_link'], ublock_xpi_path)
             if current_version_time != name['last_updated']:
                 url_list.append(name['dl_url'])
                 to_be_updated.append(name)
                 name['last_updated'] = current_version_time
             else:
                 continue
+        # elif name['location'] == 'tukui':
+        #     print(f'Processing {key}...')
+        #     current_version_time = get_version_tukui(name['anchor_link'], ublock_xpi_path)
         else:
             print(f'Processing {key}...')
             url_list.append(name['dl_url'])
-            to_be_updated.append(key)
+            to_be_updated.append(name)
 
     # let user know which addons we're updating because feedback is nice
     if len(to_be_updated) > 0:
@@ -68,8 +79,8 @@ def main():
         quit()
 
     # determine system type and assign correct download directory
-    dl_dir = get_download_path()
-    print(f'Using default Firefox download directory at {colors.GREEN}{dl_dir}{colors.ENDC}')
+    dl_dir = get_download_path(firefox_download_directory)
+    print(f'Using download directory at {colors.GREEN}{dl_dir}{colors.ENDC}')
 
     if os.name == 'nt':
         dl_dir_addons = os.path.join(dl_dir, 'AddOns')
@@ -104,9 +115,9 @@ def main():
         webbrowser.open_new_tab(url)
         sleep(2)
         dl_dir_count += 1
-    sleep(2) # Wait for two more seconds and hope downloads are finished
+    sleep(5) # Default is 2 for fast connections (over 25MBs) Wait for two more seconds and hope downloads are finished
 
-    zips = []
+    addon_zips = []
 
     # For files in dl_dir, if the file's "last-modified" timestamp is later
     # than the timestamp recorded when we ran the script, assume those
@@ -118,19 +129,19 @@ def main():
         for filename in os.listdir(dl_dir):
             full_path = os.path.join(dl_dir, filename)
             if os.path.getmtime(full_path) > now :
-                zips.append(full_path)
+                addon_zips.append(full_path)
             else:
                 continue
 
     # extract each addon to temp addon directory in default download dir
-    for filename in zips:
+    for filename in addon_zips:
         with zipfile.ZipFile(filename,'r') as zipped_file:
             zipped_file.extractall(dl_dir_addons)
 
-    addon_path = get_addon_path(zips)
+    addon_path = get_addon_path(addon_zips, wow_addon_directory)
 
     # move addon temp dir and overwrite WoW addon dir
-    # in the except block, we've gone back and forth over whether to clean up the downloaded
+    # in the except block, I've gone back and forth over whether to clean up the downloaded
     # files and the unzipped addons folder. If we've gotten this far, it seems dumb to delete
     # everything we've just downloaded. On the other hand, a graceful failure should leave the
     # system in the same state as it was before it ran. Problem for another day.
@@ -139,13 +150,12 @@ def main():
         shutil.move(dl_dir_addons, addon_path)
     except Exception:
         print(f'{colors.FAIL}Error during folder move process...{colors.ENDC}')
-        clean_downloads(zips)
+        clean_downloads(addon_zips)
         shutil.rmtree(dl_dir_addons)
-
 
     # Final cleanup and indicator of successful run
     kill_firefox()
-    clean_downloads(zips)
+    clean_downloads(addon_zips)
     # update addon_master_list.json with up-to-date "last_updated" timestamps
     update_master(addon_dict, master_list)
     print(f'Complete... \n{colors.GREEN}Script completed successfully!{colors.ENDC}')
@@ -164,7 +174,6 @@ def kill_firefox():
         os.system('taskkill /F /IM firefox.exe /T')
     else:
         os.system('pkill -f firefox')
-    
 
 def clean_downloads(list):
     '''For filename in list, delete the file.'''
@@ -172,66 +181,90 @@ def clean_downloads(list):
     for filename in list:
         os.remove(filename)
 
-def get_download_path():
+def get_download_path(path):
     '''Determine system type: Windows or MacOS. For Windows, get the Downloads folder GUID from the registry and
         programatically get the "Downloads" path. For MacOS, simple expand os.path using os.path.expanduser and 
         join with "Downloads"'''
     # Just for the record, this is needlessly complicated
     # https://stackoverflow.com/questions/35851281/python-finding-the-users-downloads-folder
-    if os.name == 'nt':
-        import winreg
-        sub_key = r'SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Shell Folders'
-        downloads_guid = '{374DE290-123F-4565-9164-39C4925E467B}'
-        with winreg.OpenKey(winreg.HKEY_CURRENT_USER, sub_key) as key:
-            location = winreg.QueryValueEx(key, downloads_guid)[0]
-        return location
-    else:
-        return os.path.join(os.path.expanduser('~'), 'Downloads')
-
-# these addon paths are default install paths for World of Warcraft
-def get_addon_path(list):
-    if os.name == 'nt':
-        wow_addon_path = 'C:\Program Files (x86)\World of Warcraft\_retail_\Interface\AddOns'
-        if os.path.exists(wow_addon_path):
-            return wow_addon_path
+    if path == '':
+        print('No custom download directory detected in config.ini. Using default download directory.')
+        if os.name == 'nt':
+            import winreg
+            sub_key = r'SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Shell Folders'
+            downloads_guid = '{374DE290-123F-4565-9164-39C4925E467B}'
+            with winreg.OpenKey(winreg.HKEY_CURRENT_USER, sub_key) as key:
+                location = winreg.QueryValueEx(key, downloads_guid)[0]
+            return location
         else:
-            print(f'{colors.FAIL}Error!{colors.ENDC} {wow_addon_path} does not exist!')
-            print('\nEnsure you have run World of Warcraft at least once to generate the folder structure.')
+            return os.path.join(os.path.expanduser('~'), 'Downloads')
+    else:
+        return path
+
+def get_addon_path(addon_list, wow_addon_directory):
+    if os.name == 'nt':
+        if os.path.isdir(wow_addon_directory):
+            return wow_addon_directory
+        else:
+            print(f'{colors.FAIL}Error!{colors.ENDC} {wow_addon_directory} does not exist!')
+            print(f'Ensure you have run World of Warcraft and logged into a character at least once to generate the required folder structure.')
+            clean_downloads(addon_list)
             kill_firefox()
-            clean_downloads(list)
+            quit()
         return wow_addon_path
     else:
-        wow_addon_path = '/Applications/World of Warcraft/_retail_/Interface/Addons'
-        if os.path.exists(wow_addon_path):
-            return wow_addon_path
+        if os.path.isdir(wow_addon_directory):
+            return wow_addon_directory
         else:
             print(f'{colors.FAIL}Error!{colors.ENDC}')
-            print(f'{colors.BOLD}{wow_addon_path}{colors.ENDC} does not exist! Ensure you have run World of Warcraft and logged into a character at least once to generate the required folder structure.')
+            print(f'{colors.BOLD}{wow_addon_directory}{colors.ENDC} does not exist!')
+            print(f'Ensure you have run World of Warcraft and logged into a character at least once to generate the required folder structure.')
             print(f'{colors.FAIL}Quitting!{colors.ENDC}')
-            clean_downloads(list)
+            clean_downloads(addon_list)
             kill_firefox()
             quit()
 
-def get_version(url):
-
+def start_browser():
     opts = FirefoxOptions()
     opts.add_argument('--headless')
     browser = webdriver.Firefox(options=opts)
+    return browser
+    
+def get_version_curseforge(url, ublock_xpi_path):
+
+    browser = start_browser()
 
     if os.name == 'nt':
-        uBlock = r'C:\Users\NEJWr\AppData\Roaming\Mozilla\Firefox\Profiles\p9hju3lr.default-release\extensions\uBlock0@raymondhill.net.xpi'
+        # Windows panics if we don't pass this as a raw string
+        ublock = fr"{ublock_xpi_path}"
     else:
-        uBlock = '/Users/nick/Library/Application Support/Firefox/Profiles/wr8z2mm6.default-release/extensions/uBlock0@raymondhill.net.xpi'
+        ublock = ublock_xpi_path
 
-    browser.install_addon(uBlock)
+    browser.install_addon(ublock)
     browser.get(url)
 
     xpath = browser.find_element(By.XPATH, "//abbr[@class='tip standard-date standard-datetime']")
     last_updated = xpath.get_attribute("data-epoch")
-    
     browser.close()
+
     return last_updated
 
+def get_version_tukui(url, ublock_xpi_path):
+    browser = start_browser()
+
+    if os.name == 'nt':
+        ublock = fr"{ublock_xpi_path}"
+    else:
+        ublock = ublock_xpi_path
+
+    browser.install_addon(ublock)
+    browser.get(url)
+
+    xpath = browser.find_element(By.XPATH, "//b[@class='Premium']")
+    last_updated = xpath.text
+    browser.close()
+
+    return last_updated
 
 if __name__ == '__main__':
     main()
