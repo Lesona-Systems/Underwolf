@@ -249,22 +249,22 @@ def get_version_curseforge(url, ublock_xpi_path):
 
     return last_updated
 
-def get_version_tukui(url, ublock_xpi_path):
-    browser = start_browser()
+# def get_version_tukui(url, ublock_xpi_path):
+#     browser = start_browser()
 
-    if os.name == 'nt':
-        ublock = fr"{ublock_xpi_path}"
-    else:
-        ublock = ublock_xpi_path
+#     if os.name == 'nt':
+#         ublock = fr"{ublock_xpi_path}"
+#     else:
+#         ublock = ublock_xpi_path
 
-    browser.install_addon(ublock)
-    browser.get(url)
+#     browser.install_addon(ublock)
+#     browser.get(url)
 
-    xpath = browser.find_element(By.XPATH, "//b[@class='Premium']")
-    last_updated = xpath.text
-    browser.close()
+#     xpath = browser.find_element(By.XPATH, "//b[@class='Premium']")
+#     last_updated = xpath.text
+#     browser.close()
 
-    return last_updated
+#     return last_updated
 
 if __name__ == '__main__':
     main()
