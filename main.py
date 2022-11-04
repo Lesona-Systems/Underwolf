@@ -125,7 +125,7 @@ def main():
         webbrowser.open_new_tab(url)
         sleep(2)
         dl_dir_count += 1
-    sleep(5) # Default is 2 for fast connections (over 25MBs) Wait for two more seconds and hope downloads are finished
+    sleep(2) # Default is 2 for fast connections (over 25MBs) Wait for two more seconds and hope downloads are finished
 
     addon_zips = []
 
@@ -241,7 +241,6 @@ def start_browser():
     return browser
     
 def get_update_time(url, ublock_xpi_path):
-
     browser = start_browser()
 
     if os.name == 'nt':
@@ -262,7 +261,13 @@ def get_update_time(url, ublock_xpi_path):
 def get_version_elvui(url, ublock_xpi_path):
     driver = start_browser()
 
-    driver.install_addon(ublock_xpi_path)
+    if os.name == 'nt':
+        # Windows panics if we don't pass this as a raw string
+        ublock = fr"{ublock_xpi_path}"
+    else:
+        ublock = ublock_xpi_path
+
+    driver.install_addon(ublock)
     driver.get(url)
 
     version = [my_elem.get_attribute("innerText") for my_elem in WebDriverWait(driver, 20).until(EC.visibility_of_all_elements_located((By.XPATH, "/html/body/div[2]/div/div/ul/li/div[4]/div/a[2]/span")))]
