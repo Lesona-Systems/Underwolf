@@ -48,8 +48,8 @@ def main():
     url_list = []
     to_be_updated = []
 
-    # read addon keys into dict. For each CF addon, call get_version() and
-    # compare to version in addon_master_list. If it's the same, move on.
+    # read addon keys into dict. For each CF addon, call get_update_time() and
+    # compare to last_updated in addon_master_list. If it's the same, move on.
     # If we've got different last_updated times, push addon to url_list[]
     # and update last_updated in addon_list.json.
     # Suprisingly, let's thank CF for tracking "last updated" in Unix time
@@ -58,7 +58,7 @@ def main():
         name = addon_dict[key]
         if name['location'] == 'cf':
             print(f'Processing {key}...')
-            current_version_time = get_version_curseforge(name['anchor_link'], ublock_xpi_path)
+            current_version_time = get_update_time(name['anchor_link'], ublock_xpi_path)
             if current_version_time != name['last_updated']:
                 url_list.append(name['dl_url'])
                 to_be_updated.append(name)
@@ -233,7 +233,7 @@ def start_browser():
     browser = webdriver.Firefox(options=opts)
     return browser
     
-def get_version_curseforge(url, ublock_xpi_path):
+def get_update_time(url, ublock_xpi_path):
 
     browser = start_browser()
 
