@@ -17,7 +17,8 @@ class colors:
 
 def main():
     # clear geckodriver.log
-    open('geckodriver.log', 'w').close
+    if os.path.exists('geckodriver.log'):
+        open('geckodriver.log', 'w').close
 
     # get current epoch for dl time comparison (so we know which files to unzip)
     now = time()
