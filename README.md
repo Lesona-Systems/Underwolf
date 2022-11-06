@@ -36,15 +36,15 @@ The script currently **requires [Firefox](https://www.mozilla.org/en-US/firefox/
 
 In order to use uBlock Origin with Selenium, you'll have to provide the path to uBlock's .xpi file in config.ini. For example:
 
-    ublock_xpi_path = C:\Users\NEJWr\AppData\Roaming\Mozilla\Firefox\Profiles\p9hju3lr.default-release\extensions\uBlock0@raymondhill.net.xpi
+    ublock_xpi_path = C:\Users\username\AppData\Roaming\Mozilla\Firefox\Profiles\RANDOMSTRING.default-release\extensions\uBlock0@raymondhill.net.xpi
 
 On Windows, you can find Mozilla's extension folder here with a default installation:
 
-    C:\Users\USER\AppData\Roaming\Mozilla\Firefox\Profiles\RANDOMSTRING.default-release\extensions\uBlock0@raymondhill.net.xpi
+    C:\Users\username\AppData\Roaming\Mozilla\Firefox\Profiles\RANDOMSTRING.default-release\extensions\uBlock0@raymondhill.net.xpi
 
 On Mac:
 
-    /Users/user/Library/Application Support/Firefox/Profiles/RANDOMSTRING.default-release/extensions/uBlock0@raymondhill.net.xpi
+    /Users/username/Library/Application Support/Firefox/Profiles/RANDOMSTRING.default-release/extensions/uBlock0@raymondhill.net.xpi
 
 config.ini is currently populated with an example path. You **must** provide a valid path to the .xpi file for the script to successfully execute.
 
