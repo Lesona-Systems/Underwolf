@@ -271,8 +271,13 @@ def get_version_elvui(url, ublock_xpi_path):
     driver.install_addon(ublock)
     driver.get(url)
 
+    # Wait for ElvUI version number to be visable, then grab it from tukui.org/welcome.php
+    # There's always the possibility that Tukui changes the location of the version number.
+    # If that happens, this will break. Luckily, the layout for the site hasn't changed since
+    # I've been running the addon. 
     version = [my_elem.get_attribute("innerText") for my_elem in WebDriverWait(driver, 20).until(EC.visibility_of_all_elements_located((By.XPATH, "/html/body/div[2]/div/div/ul/li/div[4]/div/a[2]/span")))]
 
+    # the above returns a list by default, so reassign "version" to the only element in the list
     version = (version[0])
     
     driver.close()
