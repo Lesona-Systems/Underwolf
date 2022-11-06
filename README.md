@@ -62,8 +62,8 @@ Add addons to addon_master_list.example.json like so:
 
     {
     "DBM" : {
-        "location" : "cf", # "cf" for a CurseForge addon, "tukui" for ElvUI, and "tsm" for TradeSkillMaster mods.
-        "anchor_link" : "https://www.curseforge.com/wow/addons/deadly-boss-mods", # landing page for CF mods (not needed for direct download addons)
+        "location" : "cf", # "cf" for a CurseForge addon, "elvui" for ElvUI, and "tsm" for TradeSkillMaster mods.
+        "anchor_link" : "https://www.curseforge.com/wow/addons/deadly-boss-mods", # landing page for CF mods
         "dl_url" : "https://www.curseforge.com/wow/addons/deadly-boss-mods/download", # download page (required for all addons)
         "last_updated" : "" # leave blank. The script will populate this field on first run.
     },
