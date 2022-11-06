@@ -238,11 +238,11 @@ def get_addon_path(addon_list, wow_addon_directory):
 def start_browser():
     opts = FirefoxOptions()
     opts.add_argument('--headless')
-    browser = webdriver.Firefox(options=opts)
-    return browser
+    driver = webdriver.Firefox(options=opts)
+    return driver
     
 def get_update_time(url, ublock_xpi_path):
-    browser = start_browser()
+    driver = start_browser()
 
     if os.name == 'nt':
         # Windows panics if we don't pass this as a raw string
@@ -250,12 +250,12 @@ def get_update_time(url, ublock_xpi_path):
     else:
         ublock = ublock_xpi_path
 
-    browser.install_addon(ublock)
-    browser.get(url)
+    driver.install_addon(ublock)
+    driver.get(url)
 
-    xpath = browser.find_element(By.XPATH, "//abbr[@class='tip standard-date standard-datetime']")
+    xpath = driver.find_element(By.XPATH, "//abbr[@class='tip standard-date standard-datetime']")
     last_updated = xpath.get_attribute("data-epoch")
-    browser.close()
+    driver.close()
 
     return last_updated
 
