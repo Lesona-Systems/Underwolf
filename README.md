@@ -58,7 +58,7 @@ Note that the script calls **taskkill** on all Firefox processes at the end to c
 
 ### Add addons to addons_master_list.json
 
-Add addons to addon_master_list.example.json like so:
+Add addons to addon_master_list.json like so:
 
     {
     "DBM" : {
@@ -68,12 +68,9 @@ Add addons to addon_master_list.example.json like so:
         "last_updated" : "" # leave blank. The script will populate this field on first run.
     },
 
-Rename 
-    addon_master_list_example.json
-to
-    addon_master_list.json
 
-The script will also backup the master addon list at the beginning of each run.
+
+The script will also backup master_addon_list.json at the beginning of each run.
 
 ## Copyright © 2022 Nicholas Johnson
 
