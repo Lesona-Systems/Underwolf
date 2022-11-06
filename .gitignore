@@ -1,10 +1,9 @@
 .DS_Store
 venv
+release
 
 geckodriver.exe
 geckodriver.log
-addon_master_list.json
 backup_list.json
-addon_test_list.json
 
 test
