@@ -48,17 +48,17 @@
         "last_updated" : ""
     },
 
-    "ALLTHETHINGS" : {
-        "location" : "cf",
-        "anchor_link" : "https://www.curseforge.com/wow/addons/all-the-things",
-        "dl_url" : "https://www.curseforge.com/wow/addons/all-the-things/download",
-        "last_updated" : ""
-    },
-
     "HANDYNOTES_SL" : {
         "location" : "cf",
         "anchor_link" : "https://www.curseforge.com/wow/addons/handynotes-shadowlands",
         "dl_url" : "https://www.curseforge.com/wow/addons/handynotes-shadowlands/download",
+        "last_updated" : ""
+    },
+
+    "ALLTHETHINGS" : {
+        "location" : "cf",
+        "anchor_link" : "https://www.curseforge.com/wow/addons/all-the-things",
+        "dl_url" : "https://www.curseforge.com/wow/addons/all-the-things/download",
         "last_updated" : ""
     },
 
