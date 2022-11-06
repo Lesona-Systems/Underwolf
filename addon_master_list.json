@@ -74,19 +74,5 @@
         "anchor_link" : "https://www.tukui.org/welcome.php",
         "dl_url" : "https://www.tukui.org/downloads/elvui-",
         "current_version" : ""
-    },
-
-    "TSM" : {
-        "location" : "tsm",
-        "anchor_link" : "",
-        "dl_url" : "https://www.tradeskillmaster.com/download/TradeSkillMaster.zip",
-        "last_updated" : ""
-    },
-
-    "TSM_HELPER" : {
-        "location" : "tsm",
-        "anchor_link" : "",
-        "dl_url" : "https://www.tradeskillmaster.com/download/TradeSkillMaster_AppHelper.zip",
-        "last_updated" : ""
     }
 }
