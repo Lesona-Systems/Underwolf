@@ -70,10 +70,10 @@
     },
 
     "ELVUI" : {
-        "location" : "tukui",
-        "anchor_link" : "https://www.tukui.org/download.php?ui=elvui",
-        "dl_url" : "https://www.tukui.org/downloads/elvui-12.99.zip",
-        "last_updated" : ""
+        "location" : "elvui",
+        "anchor_link" : "https://www.tukui.org/welcome.php",
+        "dl_url" : "https://www.tukui.org/downloads/elvui-",
+        "current_version" : ""
     },
 
     "TSM" : {

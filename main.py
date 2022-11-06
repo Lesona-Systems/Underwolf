@@ -4,10 +4,12 @@ import webbrowser
 import shutil
 import json
 import configparser
+from time import sleep, time
 from selenium import webdriver
 from selenium.webdriver import FirefoxOptions
 from selenium.webdriver.common.by import By
-from time import sleep, time
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 
 class colors:
     GREEN = '\033[92m'
@@ -62,13 +64,18 @@ def main():
             current_version_time = get_update_time(name['anchor_link'], ublock_xpi_path)
             if current_version_time != name['last_updated']:
                 url_list.append(name['dl_url'])
-                to_be_updated.append(name)
+                to_be_updated.append(key)
                 name['last_updated'] = current_version_time
             else:
                 continue
-        # elif name['location'] == 'tukui':
-        #     print(f'Processing {key}...')
-        #     current_version_time = get_version_tukui(name['anchor_link'], ublock_xpi_path)
+        elif name['location'] == 'elvui':
+            print(f'Processing {key}...')
+            current_version = get_version_elvui(name['anchor_link'], ublock_xpi_path)
+            if current_version != name['version']:
+                dl_url = (f"{name['dl_url']}{current_version}.zip")
+                url_list.append(dl_url)
+                to_be_updated.append(key)
+                name['version'] = current_version
         else:
             print(f'Processing {key}...')
             url_list.append(name['dl_url'])
@@ -119,7 +126,7 @@ def main():
         webbrowser.open_new_tab(url)
         sleep(2)
         dl_dir_count += 1
-    sleep(5) # Default is 2 for fast connections (over 25MBs) Wait for two more seconds and hope downloads are finished
+    sleep(2) # Default is 2 for fast connections (over 25MBs) Wait for two more seconds and hope downloads are finished
 
     addon_zips = []
 
@@ -235,7 +242,6 @@ def start_browser():
     return browser
     
 def get_update_time(url, ublock_xpi_path):
-
     browser = start_browser()
 
     if os.name == 'nt':
@@ -253,22 +259,25 @@ def get_update_time(url, ublock_xpi_path):
 
     return last_updated
 
-# def get_version_tukui(url, ublock_xpi_path):
-#     browser = start_browser()
+def get_version_elvui(url, ublock_xpi_path):
+    driver = start_browser()
 
-#     if os.name == 'nt':
-#         ublock = fr"{ublock_xpi_path}"
-#     else:
-#         ublock = ublock_xpi_path
+    if os.name == 'nt':
+        # Windows panics if we don't pass this as a raw string
+        ublock = fr"{ublock_xpi_path}"
+    else:
+        ublock = ublock_xpi_path
 
-#     browser.install_addon(ublock)
-#     browser.get(url)
+    driver.install_addon(ublock)
+    driver.get(url)
 
-#     xpath = browser.find_element(By.XPATH, "//b[@class='Premium']")
-#     last_updated = xpath.text
-#     browser.close()
+    version = [my_elem.get_attribute("innerText") for my_elem in WebDriverWait(driver, 20).until(EC.visibility_of_all_elements_located((By.XPATH, "/html/body/div[2]/div/div/ul/li/div[4]/div/a[2]/span")))]
 
-#     return last_updated
+    version = (version[0])
+    
+    driver.close()
+
+    return version
 
 if __name__ == '__main__':
     main()
