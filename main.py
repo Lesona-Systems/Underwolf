@@ -33,7 +33,7 @@ def main():
     print(f'{colors.BOLD}{colors.BLUE}This script will close any open Firefox processes. Please ensure Firefox is closed before continuing!{colors.ENDC}')
 
     while bypass_warning != "y":
-        bypass_warning = input(f'Are you ready to continue? ({colors.GREEN}{colors.BOLD}y{colors.ENDC}) or ({colors.FAIL}{colors.BOLD}n{colors.ENDC}): ').lower()
+        bypass_warning = str(input(f'Are you ready to continue? ({colors.GREEN}{colors.BOLD}y{colors.ENDC}) or ({colors.FAIL}{colors.BOLD}n{colors.ENDC}): ').lower())
         if bypass_warning == "n":
             print('Quitting!')
             quit()
