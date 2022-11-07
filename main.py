@@ -13,11 +13,33 @@ from selenium.webdriver.support import expected_conditions as EC
 
 class colors:
     GREEN = '\033[92m'
+    BLUE = '\033[94m'
     FAIL = '\033[91m'
     ENDC = '\033[0m'
     BOLD = '\033[1m'
 
 def main():
+
+    bypass_warning = ""
+    print(r"""
+     _    _               _                                    _    __ 
+    | |  | |             | |                                  | |  / _|
+    | |  | |  _ __     __| |   ___   _ __  __      __   ___   | | | |_ 
+    | |  | | | '_ \   / _` |  / _ \ | '__| \ \ /\ / /  / _ \  | | |  _|
+    | |__| | | | | | | (_| | |  __/ | |     \ V  V /  | (_) | | | | |  
+     \____/  |_| |_|  \__,_|  \___| |_|      \_/\_/    \___/  |_| |_|  
+                                                                        
+    """)
+    print(f'{colors.BOLD}{colors.BLUE}This script will close any open Firefox processes. Please ensure Firefox is closed before continuing!{colors.ENDC}')
+
+    while bypass_warning != "y":
+        bypass_warning = input(f'Are you ready to continue? ({colors.GREEN}{colors.BOLD}y{colors.ENDC}) or ({colors.FAIL}{colors.BOLD}n{colors.ENDC}): ').lower()
+        if bypass_warning == "n":
+            print('Quitting!')
+            quit()
+        else:
+            continue
+        
     # clear geckodriver.log
     if os.path.exists('geckodriver.log'):
         open('geckodriver.log', 'w').close
@@ -107,7 +129,7 @@ def main():
         dl_dir_count += 1
 
     # Target number of files/folders in Downloads directory equals (number of items)
-    # currently in the folder plus the (number of items in url_list.txt)
+    # currently in the folder plus the (number of items in url_list[])
     dl_dir_target = dl_dir_count + len(url_list)
 
     ##############
@@ -126,7 +148,7 @@ def main():
         webbrowser.open_new_tab(url)
         sleep(2)
         dl_dir_count += 1
-    sleep(2) # Default is 2 for fast connections (over 25MBs) Wait for two more seconds and hope downloads are finished
+    sleep(3) # Default is 3 for fast connections (over 25Mbs)
 
     addon_zips = []
 
