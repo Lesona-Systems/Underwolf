@@ -289,6 +289,9 @@ def get_cf_update_time(cf_url, ublock_xpi_path):
     return last_updated
 
 def get_version_elvui(elv_url, ublock_xpi_path):
+    '''Start an instance of the Selenium browser, activate the uBlock origin .xpi file
+    from the provided ublock_xpi_path, navigate to the Tukui Homepage url (elv_url),
+    and grab and return the addon's version number from the url.'''
     driver = start_browser()
 
     if os.name == 'nt':
