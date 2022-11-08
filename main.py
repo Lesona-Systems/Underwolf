@@ -194,11 +194,13 @@ def main():
     print(f'Complete... \n{colors.GREEN}Script completed successfully!{colors.ENDC}')
 
 def update_master(dict, file):
+    '''Write input dictionary to file'''
     with open(file, 'w') as json_file:
         json.dump(dict, json_file, indent=4)
 
-def make_backup(file, file2):
-    shutil.copy(file, file2)
+def make_backup(file, filename):
+    '''Back up file to filename'''
+    shutil.copy(file, filename)
 
 def kill_firefox():
     '''Kill all Firefox browser processes'''
