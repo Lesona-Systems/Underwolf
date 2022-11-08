@@ -73,7 +73,7 @@ def main():
     url_list = []
     to_be_updated = []
 
-    # read addon keys into dict. For each CF addon, call get_update_time() and
+    # read addon keys into dict. For each CF addon, call get_cf_update_time() and
     # compare to last_updated in addon_master_list. If it's the same, move on.
     # If we've got different last_updated times, push addon to url_list[]
     # and update last_updated in addon_list.json.
@@ -83,7 +83,7 @@ def main():
         name = addon_dict[key]
         if name['location'] == 'cf':
             print(f'Processing {key}...')
-            current_version_time = get_update_time(name['anchor_link'], ublock_xpi_path)
+            current_version_time = get_cf_update_time(name['anchor_link'], ublock_xpi_path)
             if current_version_time != name['last_updated']:
                 url_list.append(name['dl_url'])
                 to_be_updated.append(key)
@@ -194,11 +194,13 @@ def main():
     print(f'Complete... \n{colors.GREEN}Script completed successfully!{colors.ENDC}')
 
 def update_master(dict, file):
+    '''Write input dictionary to file'''
     with open(file, 'w') as json_file:
         json.dump(dict, json_file, indent=4)
 
-def make_backup(file, file2):
-    shutil.copy(file, file2)
+def make_backup(file, filename):
+    '''Copy file to filename'''
+    shutil.copy(file, filename)
 
 def kill_firefox():
     '''Kill all Firefox browser processes'''
@@ -258,12 +260,17 @@ def get_addon_path(addon_list, wow_addon_directory):
             quit()
 
 def start_browser():
+    '''Start a headless instance of Selenium and return the browser instance
+    that accepts Selenium methods.'''
     opts = FirefoxOptions()
     opts.add_argument('--headless')
     driver = webdriver.Firefox(options=opts)
     return driver
     
-def get_update_time(url, ublock_xpi_path):
+def get_cf_update_time(cf_url, ublock_xpi_path):
+    '''Start an instance of the Selenium browser, activate the uBlock origin .xpi file
+    from the provided ublock_xpi_path, navigate to the provided curseforge url (cf_url),
+    and grab and return the addon's updated epoch from the url.'''
     driver = start_browser()
 
     if os.name == 'nt':
@@ -273,7 +280,7 @@ def get_update_time(url, ublock_xpi_path):
         ublock = ublock_xpi_path
 
     driver.install_addon(ublock)
-    driver.get(url)
+    driver.get(cf_url)
 
     xpath = driver.find_element(By.XPATH, "//abbr[@class='tip standard-date standard-datetime']")
     last_updated = xpath.get_attribute("data-epoch")
@@ -281,7 +288,10 @@ def get_update_time(url, ublock_xpi_path):
 
     return last_updated
 
-def get_version_elvui(url, ublock_xpi_path):
+def get_version_elvui(elv_url, ublock_xpi_path):
+    '''Start an instance of the Selenium browser, activate the uBlock origin .xpi file
+    from the provided ublock_xpi_path, navigate to the Tukui Homepage url (elv_url),
+    and grab and return the addon's version number from the url.'''
     driver = start_browser()
 
     if os.name == 'nt':
@@ -291,7 +301,7 @@ def get_version_elvui(url, ublock_xpi_path):
         ublock = ublock_xpi_path
 
     driver.install_addon(ublock)
-    driver.get(url)
+    driver.get(elv_url)
 
     # Wait for ElvUI version number to be visable, then grab it from tukui.org/welcome.php
     # There's always the possibility that Tukui changes the location of the version number.
