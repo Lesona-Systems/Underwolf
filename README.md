@@ -58,17 +58,26 @@ Note that the script calls **taskkill** on all Firefox processes at the end to c
 
 ### Add addons to addons_master_list.json
 
-Add addons to addon_master_list.json like so:
+#### Adding Curseforge Addons
+Add Curseforge addons to addon_master_list.json like so:
 
     {
     "DBM" : {
-        "location" : "cf", # "cf" for a CurseForge addon, "elvui" for ElvUI, and "tsm" for TradeSkillMaster mods.
-        "anchor_link" : "https://www.curseforge.com/wow/addons/deadly-boss-mods", # landing page for CF mods
+        "location" : "cf",
+        "anchor_link" : "https://www.curseforge.com/wow/addons/deadly-boss-mods", # Addon main page
         "dl_url" : "https://www.curseforge.com/wow/addons/deadly-boss-mods/download", # download page (required for all addons)
         "last_updated" : "" # leave blank. The script will populate this field on first run.
     },
 
+#### Adding ElvUI 
+Copy the following and add it to your addons_master_list.json and the script will take care of the rest.
 
+    "ELVUI" : {
+        "location" : "elvui",
+        "anchor_link" : "https://www.tukui.org/welcome.php",
+        "dl_url" : "https://www.tukui.org/downloads/elvui-",
+        "current_version" : ""
+    },
 
 The script will also backup master_addon_list.json at the beginning of each run.
 
