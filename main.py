@@ -93,11 +93,11 @@ def main():
         elif name['location'] == 'elvui':
             print(f'Processing {key}...')
             current_version = get_version_elvui(name['anchor_link'], ublock_xpi_path)
-            if current_version != name['version']:
+            if current_version != name['current_version']:
                 dl_url = (f"{name['dl_url']}{current_version}.zip")
                 url_list.append(dl_url)
                 to_be_updated.append(key)
-                name['version'] = current_version
+                name['current_version'] = current_version
         else:
             print(f'Processing {key}...')
             url_list.append(name['dl_url'])
@@ -218,7 +218,7 @@ def clean_downloads(list):
 
 def get_download_path(path):
     '''Determine system type: Windows or MacOS. For Windows, get the Downloads folder GUID from the registry and
-        programatically get the "Downloads" path. For MacOS, simple expand os.path using os.path.expanduser and 
+        programatically get the "Downloads" path. For MacOS, expand os.path using os.path.expanduser and 
         join with "Downloads"'''
     # Just for the record, this is needlessly complicated
     # https://stackoverflow.com/questions/35851281/python-finding-the-users-downloads-folder
