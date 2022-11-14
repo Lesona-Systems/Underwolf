@@ -93,7 +93,7 @@ def main():
         elif name['location'] == 'elvui':
             print(f'Processing {key}...')
             current_version = get_version_elvui(name['anchor_link'], ublock_xpi_path)
-            if current_version != name['version']:
+            if current_version != name['current_version']:
                 dl_url = (f"{name['dl_url']}{current_version}.zip")
                 url_list.append(dl_url)
                 to_be_updated.append(key)
