@@ -97,7 +97,7 @@ def main():
                 dl_url = (f"{name['dl_url']}{current_version}.zip")
                 url_list.append(dl_url)
                 to_be_updated.append(key)
-                name['version'] = current_version
+                name['current_version'] = current_version
         else:
             print(f'Processing {key}...')
             url_list.append(name['dl_url'])
