@@ -101,12 +101,13 @@ def main():
         else:
             print(f'Processing {key}...')
             url_list.append(name['dl_url'])
-            to_be_updated.append(name)
+            to_be_updated.append(key)
 
     # let user know which addons we're updating because feedback is nice
     if len(to_be_updated) > 0:
         print(f'{colors.GREEN}The following addons will be updated:{colors.ENDC}')
-        print(to_be_updated)
+        for addon in to_be_updated:
+            print(addon)
     else:
         print(f'All World of Warcraft addons {colors.GREEN}up-to-date!{colors.ENDC}')
         quit()
