@@ -179,8 +179,7 @@ def main():
     # everything we've just downloaded. On the other hand, a graceful failure should leave the
     # system in the same state as it was before it ran. Problem for another day.
     try:
-        shutil.rmtree(addon_path)
-        shutil.move(dl_dir_addons, addon_path)
+        shutil.copytree(dl_dir_addons, addon_path, dirs_exist_ok=True)
     except Exception:
         print(f'{colors.FAIL}Error during folder move process...{colors.ENDC}')
         clean_downloads(addon_zips)
