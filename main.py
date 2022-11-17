@@ -101,12 +101,13 @@ def main():
         else:
             print(f'Processing {key}...')
             url_list.append(name['dl_url'])
-            to_be_updated.append(name)
+            to_be_updated.append(key)
 
     # let user know which addons we're updating because feedback is nice
     if len(to_be_updated) > 0:
         print(f'{colors.GREEN}The following addons will be updated:{colors.ENDC}')
-        print(to_be_updated)
+        for addon in to_be_updated:
+            print(addon)
     else:
         print(f'All World of Warcraft addons {colors.GREEN}up-to-date!{colors.ENDC}')
         quit()
@@ -179,8 +180,7 @@ def main():
     # everything we've just downloaded. On the other hand, a graceful failure should leave the
     # system in the same state as it was before it ran. Problem for another day.
     try:
-        shutil.rmtree(addon_path)
-        shutil.move(dl_dir_addons, addon_path)
+        shutil.copytree(dl_dir_addons, addon_path, dirs_exist_ok=True)
     except Exception:
         print(f'{colors.FAIL}Error during folder move process...{colors.ENDC}')
         clean_downloads(addon_zips)
@@ -306,14 +306,14 @@ def get_version_elvui(elv_url, ublock_xpi_path):
     # Wait for ElvUI version number to be visable, then grab it from tukui.org/welcome.php
     # There's always the possibility that Tukui changes the location of the version number.
     # If that happens, the XPATH below will break.
-    version = [my_elem.get_attribute("innerText") for my_elem in WebDriverWait(driver, 20).until(EC.visibility_of_all_elements_located((By.XPATH, "/html/body/div[2]/div/div/ul/li/div[4]/div/a[2]/span")))]
+    current_version = [my_elem.get_attribute("innerText") for my_elem in WebDriverWait(driver, 20).until(EC.visibility_of_all_elements_located((By.XPATH, "/html/body/div[2]/div/div/ul/li/div[4]/div/a[2]/span")))]
 
     # the above returns a list by default, so reassign "version" to the only element in the list
-    version = (version[0])
+    current_version = (current_version[0])
     
     driver.close()
 
-    return version
+    return current_version
 
 if __name__ == '__main__':
     main()
