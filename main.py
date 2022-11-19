@@ -223,7 +223,7 @@ def get_download_path(path):
     # Just for the record, this is needlessly complicated
     # https://stackoverflow.com/questions/35851281/python-finding-the-users-downloads-folder
     if path == '':
-        print('No custom download directory detected in config.ini. Using default download directory.')
+        print('No custom download directory detected in config.ini. Using the default OS download directory.')
         if os.name == 'nt':
             import winreg
             sub_key = r'SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Shell Folders'
@@ -308,7 +308,7 @@ def get_version_elvui(elv_url, ublock_xpi_path):
     # If that happens, the XPATH below will break.
     current_version = [my_elem.get_attribute("innerText") for my_elem in WebDriverWait(driver, 20).until(EC.visibility_of_all_elements_located((By.XPATH, "/html/body/div[2]/div/div/ul/li/div[4]/div/a[2]/span")))]
 
-    # the above returns a list by default, so reassign "version" to the only element in the list
+    # the above returns a list by default, so reassign "version" to the the first element in the list
     current_version = (current_version[0])
     
     driver.close()
