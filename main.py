@@ -109,7 +109,7 @@ def main():
         for addon in to_be_updated:
             print(addon)
     else:
-        print(f'All World of Warcraft addons {colors.GREEN}up-to-date!{colors.ENDC}')
+        print(f'All World of Warcraft addons {colors.GREEN}up-to-date!{colors.ENDC} \n See you in Azeroth!')
         quit()
 
     # determine system type and assign correct download directory
@@ -185,11 +185,12 @@ def main():
         shutil.rmtree(dl_dir_addons)
 
     # Final cleanup and indicator of successful run
+    final_count = len(to_be_updated)
     kill_firefox()
     clean_downloads(addon_zips)
     # update addon_master_list.json with up-to-date "last_updated" timestamps
     update_master(addon_dict, master_list)
-    print(f'Complete... \n{colors.GREEN}Script completed successfully!{colors.ENDC}')
+    print(f'{final_count} addons updated. \n{colors.GREEN}Script completed successfully!{colors.ENDC}')
 
 def update_master(dict, file):
     '''Write input dictionary to file'''
