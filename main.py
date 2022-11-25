@@ -30,7 +30,7 @@ def main():
      \____/  |_| |_|  \__,_|  \___| |_|      \_/\_/    \___/  |_| |_|  
                                                                         
     """)
-    print(f'{colors.BOLD}{colors.BLUE}This script will close any open Firefox processes. Please ensure Firefox is closed before continuing!{colors.ENDC}')
+    print(f'{colors.BOLD}{colors.BLUE}This script will close any open Firefox processes. Please ensure Firefox is closed and any in-progress downloads are finished before continuing!{colors.ENDC}')
 
     while bypass_warning != "y":
         bypass_warning = str(input(f'Are you ready to continue? ({colors.GREEN}{colors.BOLD}y{colors.ENDC}) or ({colors.FAIL}{colors.BOLD}n{colors.ENDC}): ').lower())
@@ -155,9 +155,7 @@ def main():
 
     # For files in dl_dir, if the file's "last-modified" timestamp is later
     # than the timestamp recorded when we ran the script, assume those
-    # files are the addons we just downloaded. We're going to run into problems
-    # if there are other downloads in Firefox/other browsers ongoing at the same
-    # time. Maybe let's not do that? Add a warning to script start?
+    # files are the addons we just downloaded.
 
     if dl_dir_count == dl_dir_target:
         for filename in os.listdir(dl_dir):
