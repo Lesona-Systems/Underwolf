@@ -44,7 +44,7 @@ def main():
     if os.path.exists('geckodriver.log'):
         open('geckodriver.log', 'w').close
 
-    # get current epoch for dl time comparison (so we know which files to unzip)
+    # get current epoch for download time comparison
     now = time()
 
     config = configparser.ConfigParser()

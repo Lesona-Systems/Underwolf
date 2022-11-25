@@ -1,12 +1,15 @@
 # Underwolf
 
-Underwolf is my best answer to updating my World of Warcraft addons, both on and off CurseForge after the retirement of the CurseForge API (staying away from the CurseForge application). 
+Underwolf is a Python script to update World of Warcraft addons without the need for any third-party addon managers. It's capable of version-checking and downloading Curseforge addons and ElvUI, as well as bulk downloading any other addons with direct download links.
+**This software is still in pre-release, and there may be bugs. Pull & feature requests are welcome. Please report any issues you encounter.**
 
-**This software is still in pre-release, and there may be bugs. Pull requests are welcome. Please report any issues you encounter.**
+Underwolf utilizes Python's built-in webbrowser library to navigate to [CurseForge](https://www.curseforge.com/) download pages (as well as other direct download URLs, such as [Tukui](https://www.tukui.org) and [Trade Skill Master](https://www.tradeskillmaster.com/)) and download the specified addons, unzip them, and move them into the WoW addon folder. The script utilizes Selenium for version checking (version checking is only implemented on CurseForge addons and ElvUI).
 
-It utilizes Python's built-in webbrowser library to navigate to [CurseForge](https://www.curseforge.com/) download pages (as well as other direct download URLs, such as [Tukui](https://www.tukui.org) and [Trade Skill Master](https://www.tradeskillmaster.com/)) and download the specified addons, unzip them, and move them into the WoW addon folder. The script utilizes Selenium for version checking (version checking is only implemented on CurseForge addons and ElvUI).
+The script works on both MacOS and Windows.
 
 ## Requirements
+
+### Clone Underwolf
 
 Clone the repo, cd into the directory, and run the following:
 
@@ -34,7 +37,7 @@ Add the full path of your World of Warcraft Addon directory to config.ini. For e
 
 The script currently **requires [Firefox](https://www.mozilla.org/en-US/firefox/new/) and [uBlock Origin](https://addons.mozilla.org/en-US/firefox/addon/ublock-origin/).** uBlock Origin "fast-forwards" the CurseForge imposed 5-second wait time (as well as other sites) before the download starts on the download pages. Additionally, it cuts the total amount of time for the script to execute by around half.
 
-In order to use uBlock Origin with Selenium, you'll have to provide the path to uBlock's .xpi file in config.ini. For example:
+In order to use uBlock Origin with Underwolf, you have to provide the system path to uBlock's .xpi file in config.ini. For example:
 
     ublock_xpi_path = C:\Users\username\AppData\Roaming\Mozilla\Firefox\Profiles\RANDOMSTRING.default-release\extensions\uBlock0@raymondhill.net.xpi
 
