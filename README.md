@@ -67,9 +67,9 @@ Add Curseforge addons to addon_master_list.json like so:
     {
     "DBM" : {
         "location" : "cf",
-        "anchor_link" : "https://www.curseforge.com/wow/addons/deadly-boss-mods", # Addon main page
-        "dl_url" : "https://www.curseforge.com/wow/addons/deadly-boss-mods/download", # download page (required for all addons)
-        "last_updated" : "" # leave blank. The script will populate this field on first run.
+        "anchor_link" : "https://www.curseforge.com/wow/addons/deadly-boss-mods",
+        "dl_url" : "https://www.curseforge.com/wow/addons/deadly-boss-mods/download",
+        "last_updated" : ""
     },
 
 #### Adding ElvUI 
@@ -86,6 +86,6 @@ The script will also backup master_addon_list.json at the beginning of each run.
 
 ## Copyright © 2022 Nicholas Johnson
 
-Permission to use, copy, modify, distribute, and sell this software and its documentation for any purpose is hereby granted without fee, provided thatthe above copyright notice appear in all copies and that both that copyright notice and this permission notice appear in supporting documentation. No representations are made about the suitability of this software for any purpose.  It is provided "as is" without express or implied warranty.
+Permission to use, copy, modify, distribute, and sell this software and its documentation for any purpose is hereby granted without fee, provided that the above copyright notice appear in all copies and that both that copyright notice and this permission notice appear in supporting documentation. No representations are made about the suitability of this software for any purpose.  It is provided "as is" without express or implied warranty.
 
 Tested on **MacOS Ventura v13.1 Beta (22A5352e)** and **Windows 11 (Stable)** using **Firefox 106.0** with **uBlockOrigin 1.44.4**. Tested on Python 3.10.6, but should work with Python 3.+.
