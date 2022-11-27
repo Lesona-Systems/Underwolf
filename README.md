@@ -67,9 +67,9 @@ Add Curseforge addons to addon_master_list.json like so:
     {
     "DBM" : {
         "location" : "cf",
-        "anchor_link" : "https://www.curseforge.com/wow/addons/deadly-boss-mods", # Addon main page
-        "dl_url" : "https://www.curseforge.com/wow/addons/deadly-boss-mods/download", # download page (required for all addons)
-        "last_updated" : "" # leave blank. The script will populate this field on first run.
+        "anchor_link" : "https://www.curseforge.com/wow/addons/deadly-boss-mods",
+        "dl_url" : "https://www.curseforge.com/wow/addons/deadly-boss-mods/download",
+        "last_updated" : ""
     },
 
 #### Adding ElvUI 
