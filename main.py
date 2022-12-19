@@ -198,7 +198,7 @@ def main():
     clean_downloads(addon_zips)
     # update addon_master_list.json with up-to-date "last_updated" timestamps
     update_master(addon_dict, master_list)
-    print(f'{final_count} addons updated. \n{colors.GREEN}Script completed successfully!{colors.ENDC}')
+    print(f'{final_count} addons updated. \n{colors.GREEN}Script completed successfully!{colors.ENDC} See you in Azeroth!')
 
 def update_master(dict, file):
     '''Write input dictionary to file'''
