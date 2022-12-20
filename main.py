@@ -98,6 +98,14 @@ def main():
                 url_list.append(dl_url)
                 to_be_updated.append(key)
                 name['current_version'] = current_version
+        elif name['location'] == 'tukui':
+            print(f'Processing {key}...')
+            current_version = get_version_tukui(name['anchor_link'], ublock_xpi_path)
+            if current_version != name['current_version']:
+                dl_url = (f"{name['dl_url']}{current_version}.zip")
+                url_list.append(dl_url)
+                to_be_updated.append(key)
+                name['current_version'] = current_version
         else:
             print(f'Processing {key}...')
             url_list.append(name['dl_url'])
@@ -107,7 +115,7 @@ def main():
     if len(to_be_updated) > 0:
         print(f'{colors.GREEN}The following addons will be updated:{colors.ENDC}')
         for addon in to_be_updated:
-            print(addon)
+            print(f'{colors.BOLD}{addon}{colors.ENDC}')
     else:
         print(f'All World of Warcraft addons {colors.GREEN}up-to-date!{colors.ENDC} \n See you in Azeroth!')
         quit()
@@ -122,9 +130,9 @@ def main():
         dl_dir_addons = os.path.join(dl_dir, 'Addons')
 
     # Intialize dl_dir_count to count number of files currently in Download directory
-    # so we can "guess" when we're done. I haven't found a way to detect the difference
+    # so we can infer when we're done. I haven't found a way to detect the difference
     # between an incomplete file download and a complete one. Neither Selenium nor Python's
-    # built in webbrowser have this built in.
+    # built in webbrowser lib have this built-in.
     dl_dir_count = 0
     for filename in os.listdir(dl_dir):
         dl_dir_count += 1
@@ -190,7 +198,7 @@ def main():
     clean_downloads(addon_zips)
     # update addon_master_list.json with up-to-date "last_updated" timestamps
     update_master(addon_dict, master_list)
-    print(f'{final_count} addons updated. \n{colors.GREEN}Script completed successfully!{colors.ENDC}')
+    print(f'{final_count} addons updated. \n{colors.GREEN}Script completed successfully!{colors.ENDC} See you in Azeroth!')
 
 def update_master(dict, file):
     '''Write input dictionary to file'''
@@ -306,6 +314,33 @@ def get_version_elvui(elv_url, ublock_xpi_path):
     # There's always the possibility that Tukui changes the location of the version number.
     # If that happens, the XPATH below will break.
     current_version = [my_elem.get_attribute("innerText") for my_elem in WebDriverWait(driver, 20).until(EC.visibility_of_all_elements_located((By.XPATH, "/html/body/div[2]/div/div/ul/li/div[4]/div/a[2]/span")))]
+
+    # the above returns a list by default, so reassign "version" to the the first element in the list
+    current_version = (current_version[0])
+    
+    driver.close()
+
+    return current_version
+
+def get_version_tukui(tukui_url, ublock_xpi_path):
+    '''Start an instance of the Selenium browser, activate the uBlock origin .xpi file
+    from the provided ublock_xpi_path, navigate to the Tukui Homepage url (elv_url),
+    and grab and return the addon's version number from the url.'''
+    driver = start_browser()
+
+    if os.name == 'nt':
+        # Windows panics if we don't pass this as a raw string
+        ublock = fr"{ublock_xpi_path}"
+    else:
+        ublock = ublock_xpi_path
+
+    driver.install_addon(ublock)
+    driver.get(tukui_url)
+
+    # Wait for ElvUI version number to be visable, then grab it from tukui.org/welcome.php
+    # There's always the possibility that Tukui changes the location of the version number.
+    # If that happens, the XPATH below will break.
+    current_version = [my_elem.get_attribute("innerText") for my_elem in WebDriverWait(driver, 20).until(EC.visibility_of_all_elements_located((By.XPATH, "/html/body/div[2]/div/div/ul/li/div[4]/div/a[1]/span")))]
 
     # the above returns a list by default, so reassign "version" to the the first element in the list
     current_version = (current_version[0])
