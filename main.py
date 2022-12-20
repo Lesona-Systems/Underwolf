@@ -30,7 +30,7 @@ def main():
      \____/  |_| |_|  \__,_|  \___| |_|      \_/\_/    \___/  |_| |_|  
                                                                         
     """)
-    print(f'{colors.BOLD}{colors.BLUE}This script will close any open Firefox processes. Please ensure Firefox is closed before continuing!{colors.ENDC}')
+    print(f'{colors.BOLD}{colors.BLUE}This script will close any open Firefox processes. Please ensure Firefox is closed and any in-progress downloads are finished before continuing!{colors.ENDC}')
 
     while bypass_warning != "y":
         bypass_warning = str(input(f'Are you ready to continue? ({colors.GREEN}{colors.BOLD}y{colors.ENDC}) or ({colors.FAIL}{colors.BOLD}n{colors.ENDC}): ').lower())
@@ -44,7 +44,7 @@ def main():
     if os.path.exists('geckodriver.log'):
         open('geckodriver.log', 'w').close
 
-    # get current epoch for dl time comparison (so we know which files to unzip)
+    # get current epoch for download time comparison
     now = time()
 
     config = configparser.ConfigParser()
@@ -93,22 +93,31 @@ def main():
         elif name['location'] == 'elvui':
             print(f'Processing {key}...')
             current_version = get_version_elvui(name['anchor_link'], ublock_xpi_path)
-            if current_version != name['version']:
+            if current_version != name['current_version']:
                 dl_url = (f"{name['dl_url']}{current_version}.zip")
                 url_list.append(dl_url)
                 to_be_updated.append(key)
-                name['version'] = current_version
+                name['current_version'] = current_version
+        elif name['location'] == 'tukui':
+            print(f'Processing {key}...')
+            current_version = get_version_tukui(name['anchor_link'], ublock_xpi_path)
+            if current_version != name['current_version']:
+                dl_url = (f"{name['dl_url']}{current_version}.zip")
+                url_list.append(dl_url)
+                to_be_updated.append(key)
+                name['current_version'] = current_version
         else:
             print(f'Processing {key}...')
             url_list.append(name['dl_url'])
-            to_be_updated.append(name)
+            to_be_updated.append(key)
 
     # let user know which addons we're updating because feedback is nice
     if len(to_be_updated) > 0:
         print(f'{colors.GREEN}The following addons will be updated:{colors.ENDC}')
-        print(to_be_updated)
+        for addon in to_be_updated:
+            print(f'{colors.BOLD}{addon}{colors.ENDC}')
     else:
-        print(f'All World of Warcraft addons {colors.GREEN}up-to-date!{colors.ENDC}')
+        print(f'All World of Warcraft addons {colors.GREEN}up-to-date!{colors.ENDC} \n See you in Azeroth!')
         quit()
 
     # determine system type and assign correct download directory
@@ -121,9 +130,9 @@ def main():
         dl_dir_addons = os.path.join(dl_dir, 'Addons')
 
     # Intialize dl_dir_count to count number of files currently in Download directory
-    # so we can "guess" when we're done. I haven't found a way to detect the difference
+    # so we can infer when we're done. I haven't found a way to detect the difference
     # between an incomplete file download and a complete one. Neither Selenium nor Python's
-    # built in webbrowser have this built in.
+    # built in webbrowser lib have this built-in.
     dl_dir_count = 0
     for filename in os.listdir(dl_dir):
         dl_dir_count += 1
@@ -154,9 +163,7 @@ def main():
 
     # For files in dl_dir, if the file's "last-modified" timestamp is later
     # than the timestamp recorded when we ran the script, assume those
-    # files are the addons we just downloaded. We're going to run into problems
-    # if there are other downloads in Firefox/other browsers ongoing at the same
-    # time. Maybe let's not do that? Add a warning to script start?
+    # files are the addons we just downloaded.
 
     if dl_dir_count == dl_dir_target:
         for filename in os.listdir(dl_dir):
@@ -179,19 +186,19 @@ def main():
     # everything we've just downloaded. On the other hand, a graceful failure should leave the
     # system in the same state as it was before it ran. Problem for another day.
     try:
-        shutil.rmtree(addon_path)
-        shutil.move(dl_dir_addons, addon_path)
+        shutil.copytree(dl_dir_addons, addon_path, dirs_exist_ok=True)
     except Exception:
         print(f'{colors.FAIL}Error during folder move process...{colors.ENDC}')
         clean_downloads(addon_zips)
         shutil.rmtree(dl_dir_addons)
 
     # Final cleanup and indicator of successful run
+    final_count = len(to_be_updated)
     kill_firefox()
     clean_downloads(addon_zips)
     # update addon_master_list.json with up-to-date "last_updated" timestamps
     update_master(addon_dict, master_list)
-    print(f'Complete... \n{colors.GREEN}Script completed successfully!{colors.ENDC}')
+    print(f'{final_count} addons updated. \n{colors.GREEN}Script completed successfully!{colors.ENDC} See you in Azeroth!')
 
 def update_master(dict, file):
     '''Write input dictionary to file'''
@@ -218,12 +225,12 @@ def clean_downloads(list):
 
 def get_download_path(path):
     '''Determine system type: Windows or MacOS. For Windows, get the Downloads folder GUID from the registry and
-        programatically get the "Downloads" path. For MacOS, simple expand os.path using os.path.expanduser and 
+        programatically get the "Downloads" path. For MacOS, expand os.path using os.path.expanduser and 
         join with "Downloads"'''
     # Just for the record, this is needlessly complicated
     # https://stackoverflow.com/questions/35851281/python-finding-the-users-downloads-folder
     if path == '':
-        print('No custom download directory detected in config.ini. Using default download directory.')
+        print('No custom download directory detected in config.ini. Using the default OS download directory.')
         if os.name == 'nt':
             import winreg
             sub_key = r'SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Shell Folders'
@@ -306,14 +313,41 @@ def get_version_elvui(elv_url, ublock_xpi_path):
     # Wait for ElvUI version number to be visable, then grab it from tukui.org/welcome.php
     # There's always the possibility that Tukui changes the location of the version number.
     # If that happens, the XPATH below will break.
-    version = [my_elem.get_attribute("innerText") for my_elem in WebDriverWait(driver, 20).until(EC.visibility_of_all_elements_located((By.XPATH, "/html/body/div[2]/div/div/ul/li/div[4]/div/a[2]/span")))]
+    current_version = [my_elem.get_attribute("innerText") for my_elem in WebDriverWait(driver, 20).until(EC.visibility_of_all_elements_located((By.XPATH, "/html/body/div[2]/div/div/ul/li/div[4]/div/a[2]/span")))]
 
-    # the above returns a list by default, so reassign "version" to the only element in the list
-    version = (version[0])
+    # the above returns a list by default, so reassign "version" to the the first element in the list
+    current_version = (current_version[0])
     
     driver.close()
 
-    return version
+    return current_version
+
+def get_version_tukui(tukui_url, ublock_xpi_path):
+    '''Start an instance of the Selenium browser, activate the uBlock origin .xpi file
+    from the provided ublock_xpi_path, navigate to the Tukui Homepage url (elv_url),
+    and grab and return the addon's version number from the url.'''
+    driver = start_browser()
+
+    if os.name == 'nt':
+        # Windows panics if we don't pass this as a raw string
+        ublock = fr"{ublock_xpi_path}"
+    else:
+        ublock = ublock_xpi_path
+
+    driver.install_addon(ublock)
+    driver.get(tukui_url)
+
+    # Wait for ElvUI version number to be visable, then grab it from tukui.org/welcome.php
+    # There's always the possibility that Tukui changes the location of the version number.
+    # If that happens, the XPATH below will break.
+    current_version = [my_elem.get_attribute("innerText") for my_elem in WebDriverWait(driver, 20).until(EC.visibility_of_all_elements_located((By.XPATH, "/html/body/div[2]/div/div/ul/li/div[4]/div/a[1]/span")))]
+
+    # the above returns a list by default, so reassign "version" to the the first element in the list
+    current_version = (current_version[0])
+    
+    driver.close()
+
+    return current_version
 
 if __name__ == '__main__':
     main()
