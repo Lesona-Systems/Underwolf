@@ -81,6 +81,18 @@ Copy the following and add it to your addons_master_list.json and the script wil
 
 The script will also backup master_addon_list.json at the beginning of each run.
 
+#### Adding ElvUI 
+Copy the following and add it to your addons_master_list.json and the script will take care of the rest.
+
+    "TUKUI" : {
+        "location" : "tukui",
+        "anchor_link" : "https://www.tukui.org/welcome.php",
+        "dl_url" : "https://www.tukui.org/downloads/tukui-",
+        "current_version" : ""
+    },
+
+The script will also backup master_addon_list.json at the beginning of each run.
+
 ## Copyright © 2022 Nicholas Johnson
 
 Permission to use, copy, modify, distribute, and sell this software and its documentation for any purpose is hereby granted without fee, provided thatthe above copyright notice appear in all copies and that both that copyright notice and this permission notice appear in supporting documentation. No representations are made about the suitability of this software for any purpose.  It is provided "as is" without express or implied warranty.
