@@ -84,7 +84,7 @@ Copy the following and add it to your addons_master_list.json and the script wil
 
 The script will also backup master_addon_list.json at the beginning of each run.
 
-#### Adding ElvUI 
+#### Adding TukUI
 Copy the following and add it to your addons_master_list.json and the script will take care of the rest.
 
     "TUKUI" : {
