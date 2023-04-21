@@ -224,8 +224,8 @@ def clean_downloads(list):
         os.remove(filename)
 
 def get_download_path(path):
-    '''Determine system type: Windows or MacOS. For Windows, get the Downloads folder GUID from the registry and
-        programatically get the "Downloads" path. For MacOS, expand os.path using os.path.expanduser and 
+    '''Determine system type: Windows, MacOS, or Linux. For Windows, get the Downloads folder GUID from the registry and
+        programatically get the "Downloads" path. For MacOS/Linux, expand os.path using os.path.expanduser and 
         join with "Downloads"'''
     # Just for the record, this is needlessly complicated
     # https://stackoverflow.com/questions/35851281/python-finding-the-users-downloads-folder
