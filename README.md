@@ -1,11 +1,11 @@
 # Underwolf
 
 Underwolf is a Python script to update World of Warcraft addons without the need for any third-party addon managers. It's capable of version-checking and downloading Curseforge addons and ElvUI, as well as bulk downloading any other addons with direct download links.
-**This software is still in pre-release, and there may be bugs. Pull & feature requests are welcome. Please report any issues you encounter.**
+**Pull & feature requests are welcome. Please report any issues you encounter.**
 
-Underwolf utilizes Python's built-in webbrowser library to navigate to [CurseForge](https://www.curseforge.com/) download pages (as well as other direct download URLs, such as [Tukui](https://www.tukui.org) and [Trade Skill Master](https://www.tradeskillmaster.com/)) and download the specified addons, unzip them, and move them into the WoW addon folder. The script utilizes Selenium for version checking (version checking is only implemented on CurseForge addons and ElvUI).
+Underwolf utilizes Python's built-in webbrowser library to navigate to [CurseForge](https://legacy.curseforge.com/) download pages (as well as other direct download URLs, such as [Tukui](https://legacy.tukui.org) and [Trade Skill Master](https://legacy.tradeskillmaster.com/)) and download the specified addons, unzip them, and move them into the WoW addon folder. The script utilizes Selenium for version checking (version checking is only implemented on CurseForge addons and ElvUI).
 
-The script works on both MacOS and Windows.
+The script works on MacOS, Windows, and Linux.
 
 ## Requirements
 
@@ -49,13 +49,19 @@ On Mac:
 
     /Users/username/Library/Application Support/Firefox/Profiles/RANDOMSTRING.default-release/extensions/uBlock0@raymondhill.net.xpi
 
-config.ini is currently populated with an example path. You **must** provide a valid path to the .xpi file for the script to successfully execute.
+On Linux:
+    /home/username/.mozilla/firefox/RANDOMSTRING.default-release/extensions/uBlock0@raymondhill.net.xpi
+
+config.ini is currently populated with a dev path. You **must** provide a valid path to the .xpi file for the script to successfully execute.
 
 **The script will not work without uBlock Origin.**
 
 ### Install the geckodriver
 
-The script uses Selenium and built-in Python libraries - you must have the [Firefox Gecko driver](https://github.com/mozilla/geckodriver/releases) appropriate for your system. Unzip the driver into the Underwolf directory.
+The script uses Selenium and built-in Python libraries - you must have the [Firefox Gecko driver](https://github.com/mozilla/geckodriver/releases) appropriate for your system. Unzip the driver into the Underwolf directory on MacOS and Windows. 
+
+In Linux, move the geckodriver you've downloaded to:
+    /usr/local/bin
 
 Note that the script calls **taskkill** on all Firefox processes at the end to clean up. Chrome implementation is planned for a later version (Although that may become obsolete with Manifest V3 and its effect on ad blockers).
 
@@ -67,8 +73,8 @@ Add Curseforge addons to addon_master_list.json like so:
     {
     "DBM" : {
         "location" : "cf",
-        "anchor_link" : "https://www.curseforge.com/wow/addons/deadly-boss-mods",
-        "dl_url" : "https://www.curseforge.com/wow/addons/deadly-boss-mods/download",
+        "anchor_link" : "https://legacy.curseforge.com/wow/addons/deadly-boss-mods",
+        "dl_url" : "https://legacy.curseforge.com/wow/addons/deadly-boss-mods/download",
         "last_updated" : ""
     },
 
