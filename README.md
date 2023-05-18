@@ -64,7 +64,6 @@ Note that the script calls **taskkill** on all Firefox processes at the end to c
 #### Adding Curseforge Addons
 Add Curseforge addons to addon_master_list.json like so:
 
-    {
     "DBM" : {
         "location" : "cf",
         "anchor_link" : "https://www.curseforge.com/wow/addons/deadly-boss-mods",
