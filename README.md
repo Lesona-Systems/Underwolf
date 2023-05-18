@@ -5,7 +5,9 @@ Underwolf is a Python script to update World of Warcraft addons without the need
 
 Underwolf utilizes Python's built-in webbrowser library to navigate to [CurseForge](https://legacy.curseforge.com/) download pages (as well as other direct download URLs, such as [Tukui](https://legacy.tukui.org) and [Trade Skill Master](https://legacy.tradeskillmaster.com/)) and download the specified addons, unzip them, and move them into the WoW addon folder. The script utilizes Selenium for version checking (version checking is only implemented on CurseForge addons and ElvUI).
 
+
 **The script works on MacOS, Windows, and Linux.**
+
 
 ## Requirements
 
@@ -63,14 +65,13 @@ The script uses Selenium and built-in Python libraries - you must have the [Fire
 In Linux, move the geckodriver you've downloaded to:
     /usr/local/bin
 
-Note that the script calls **taskkill** on all Firefox processes at the end to clean up. Chrome implementation is planned for a later version (Although that may become obsolete with Manifest V3 and its effect on ad blockers).
+Note that the script calls **taskkill** on all Firefox processes at the end to clean up. There is no Chrome implementation planned.
 
 ### Add addons to addons_master_list.json
 
 #### Adding Curseforge Addons
 Add Curseforge addons to addon_master_list.json like so:
 
-    {
     "DBM" : {
         "location" : "cf",
         "anchor_link" : "https://legacy.curseforge.com/wow/addons/deadly-boss-mods",
@@ -102,7 +103,7 @@ Copy the following and add it to your addons_master_list.json and the script wil
 
 The script will also backup master_addon_list.json at the beginning of each run.
 
-## Copyright © 2022 Nicholas Johnson
+## Copyright © 2022-2023 Nicholas Johnson
 
 Permission to use, copy, modify, distribute, and sell this software and its documentation for any purpose is hereby granted without fee, provided that the above copyright notice appear in all copies and that both that copyright notice and this permission notice appear in supporting documentation. No representations are made about the suitability of this software for any purpose.  It is provided "as is" without express or implied warranty.
 
