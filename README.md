@@ -54,6 +54,7 @@ On Mac:
     /Users/username/Library/Application Support/Firefox/Profiles/RANDOMSTRING.default-release/extensions/uBlock0@raymondhill.net.xpi
 
 On Linux:
+
     /home/username/.mozilla/firefox/RANDOMSTRING.default-release/extensions/uBlock0@raymondhill.net.xpi
 
 config.ini is currently populated with a dev path. You **must** provide a valid path to the .xpi file for the script to successfully execute.
