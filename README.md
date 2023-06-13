@@ -107,8 +107,4 @@ Copy the following and add it to your addons_master_list.json and the script wil
 
 The script will also backup master_addon_list.json at the beginning of each run.
 
-## Copyright © 2022-2023 Nicholas Johnson
-
-Permission to use, copy, modify, distribute, and sell this software and its documentation for any purpose is hereby granted without fee, provided that the above copyright notice appear in all copies and that both that copyright notice and this permission notice appear in supporting documentation. No representations are made about the suitability of this software for any purpose.  It is provided "as is" without express or implied warranty.
-
 Tested on MacOS, Windows, and Debian with **uBlockOrigin 1.44.4**. Tested on Python 3.10.6, but should work with Python 3.+.
