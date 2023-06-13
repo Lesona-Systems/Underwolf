@@ -25,9 +25,11 @@ then activate the virtual environment and run
 
 #### Download Directory
 
-Add the full path of your Firefox download directory to config.ini. For example:
+If you have a custom download directory set for Firefox, add the full path of your Firefox download directory to config.ini. For example:
 
-    firefox_download_directory = C:\Users\username\Downloads
+    firefox_download_directory = C:\Users\username\{CustomDir}
+
+If you are using your OS' default download directory, leave this field blank.
 
 #### World of Warcraft Addon Directory
 
