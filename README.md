@@ -66,6 +66,7 @@ config.ini is currently populated with a dev path. You **must** provide a valid 
 The script uses Selenium and built-in Python libraries - you must have the [Firefox Gecko driver](https://github.com/mozilla/geckodriver/releases) appropriate for your system. Unzip the driver into the Underwolf directory on MacOS and Windows. 
 
 In Linux, move the geckodriver you've downloaded to:
+
     /usr/local/bin
 
 Note that the script calls **taskkill** on all Firefox processes at the end to clean up. There is no Chrome implementation planned.
