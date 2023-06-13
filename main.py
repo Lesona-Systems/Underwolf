@@ -196,6 +196,7 @@ def main():
     final_count = len(to_be_updated)
     kill_firefox()
     clean_downloads(addon_zips)
+    clean_temp_addon_folder(dl_dir_addons)
     # update addon_master_list.json with up-to-date "last_updated" timestamps
     update_master(addon_dict, master_list)
     print(f'{final_count} addons updated. \n{colors.GREEN}Script completed successfully!{colors.ENDC} See you in Azeroth!')
@@ -219,9 +220,14 @@ def kill_firefox():
 
 def clean_downloads(list):
     '''For filename in list, delete the file.'''
-    print(f'Cleaning {colors.GREEN}Downloads{colors.ENDC} folder...')
+    print(f'Cleaning {colors.GREEN}Downloaded{colors.ENDC} zips...')
     for filename in list:
         os.remove(filename)
+
+def clean_temp_addon_folder(path):
+        print(f'Cleaning {colors.GREEN}Temp Addon{colors.ENDC} folder...')
+        shutil.rmtree(path)
+
 
 def get_download_path(path):
     '''Determine system type: Windows, MacOS, or Linux. For Windows, get the Downloads folder GUID from the registry and
