@@ -1,9 +1,10 @@
 # Underwolf
 
 Underwolf is a Python script to update World of Warcraft addons without the need for any third-party addon managers. It's capable of version-checking and downloading Curseforge addons and ElvUI, as well as bulk downloading any other addons with direct download links.
+
 **Pull & feature requests are welcome. Please report any issues you encounter.**
 
-Underwolf utilizes Python's built-in webbrowser library to navigate to [CurseForge](https://legacy.curseforge.com/) download pages (as well as other direct download URLs, such as [Tukui](https://legacy.tukui.org) and [Trade Skill Master](https://legacy.tradeskillmaster.com/)) and download the specified addons, unzip them, and move them into the WoW addon folder. The script utilizes Selenium for version checking (version checking is only implemented on CurseForge addons and ElvUI).
+Underwolf utilizes Python's built-in webbrowser library to navigate to legacy [CurseForge](https://legacy.curseforge.com/) download pages (as well as other direct download URLs, such as [Tukui](https://legacy.tukui.org) and [Trade Skill Master](https://legacy.tradeskillmaster.com/)) and download the specified addons, unzip them, and move them into the WoW addon folder. The script utilizes Selenium for version checking (version checking is only implemented on CurseForge addons and ElvUI).
 
 
 **The script works on MacOS, Windows, and Linux.**
@@ -91,9 +92,7 @@ Copy the following and add it to your addons_master_list.json and the script wil
         "anchor_link" : "https://www.tukui.org/elvui",
         "dl_url" : "https://www.tukui.org/downloads/elvui#",
         "current_version" : ""
-    },
-
-The script will also backup master_addon_list.json at the beginning of each run.
+    }
 
 #### Adding TukUI
 Copy the following and add it to your addons_master_list.json and the script will take care of the rest.
@@ -103,7 +102,7 @@ Copy the following and add it to your addons_master_list.json and the script wil
         "anchor_link" : "https://www.tukui.org/tukui",
         "dl_url" : "https://www.tukui.org/downloads/tukui#",
         "current_version" : ""
-    },
+    }
 
 The script will also backup master_addon_list.json at the beginning of each run.
 
