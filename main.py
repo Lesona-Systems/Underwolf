@@ -94,7 +94,7 @@ def main():
             print(f'Processing {key}...')
             current_version = get_version_elvui(name['anchor_link'], ublock_xpi_path)
             if current_version != name['current_version']:
-                dl_url = (f"{name['dl_url']}{current_version}.zip")
+                dl_url = (f"{name['dl_url']}")
                 url_list.append(dl_url)
                 to_be_updated.append(key)
                 name['current_version'] = current_version
@@ -102,7 +102,7 @@ def main():
             print(f'Processing {key}...')
             current_version = get_version_tukui(name['anchor_link'], ublock_xpi_path)
             if current_version != name['current_version']:
-                dl_url = (f"{name['dl_url']}{current_version}.zip")
+                dl_url = (f"{name['dl_url']}")
                 url_list.append(dl_url)
                 to_be_updated.append(key)
                 name['current_version'] = current_version
