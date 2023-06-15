@@ -100,7 +100,7 @@ Copy the following and add it to your addons_master_list.json and the script wil
 
     "TUKUI" : {
         "location" : "tukui",
-        "anchor_link" : "https://www.tukui.org/welcome.php",
+        "anchor_link" : "https://www.tukui.org/tukui",
         "dl_url" : "https://www.tukui.org/downloads/tukui-",
         "current_version" : ""
     },
