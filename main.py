@@ -319,9 +319,11 @@ def get_version_elvui(elv_url, ublock_xpi_path):
     # Wait for ElvUI version number to be visable, then grab it from tukui.org/welcome.php
     # There's always the possibility that Tukui changes the location of the version number.
     # If that happens, the XPATH below will break.
-    current_version = [my_elem.get_attribute("innerText") for my_elem in WebDriverWait(driver, 20).until(EC.visibility_of_all_elements_located((By.XPATH, '//*[@id="download-button"]')))]
+    version_list = [my_elem.get_attribute("innerText") for my_elem in WebDriverWait(driver, 20).until(EC.visibility_of_all_elements_located((By.XPATH, '//*[@id="download-button"]')))]
     # the above returns a list by default, so reassign "version" to the the first element in the list.
-    current_version = (current_version[0])
+    version_item = version_list[0]
+    version_split = version_item.split()
+    current_version = (version_split[-1])
 
     driver.close()
 
