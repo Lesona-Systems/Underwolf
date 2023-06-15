@@ -88,7 +88,7 @@ Copy the following and add it to your addons_master_list.json and the script wil
 
     "ELVUI" : {
         "location" : "elvui",
-        "anchor_link" : "https://www.tukui.org/welcome.php",
+        "anchor_link" : "https://www.tukui.org/elvui",
         "dl_url" : "https://www.tukui.org/downloads/elvui-",
         "current_version" : ""
     },
