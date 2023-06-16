@@ -69,7 +69,7 @@ def main():
     with open(master_list) as master:
         addon_dict = json.load(master)
 
-    # initialize empty lists for addons and feedback
+    # initialize empty lists for addons (url_list[]) and user feedback (to_be_updated[])
     url_list = []
     to_be_updated = []
 
@@ -90,6 +90,8 @@ def main():
                 name['last_updated'] = current_version_time
             else:
                 continue
+    # Here we do the same for TukUI and ElvUI, with the only difference being we check
+    # current_version instead of current version time.
         elif name['location'] == 'elvui':
             print(f'Processing {key}...')
             current_version = get_version_elvui(name['anchor_link'], ublock_xpi_path)
@@ -106,12 +108,15 @@ def main():
                 url_list.append(dl_url)
                 to_be_updated.append(key)
                 name['current_version'] = current_version
+    # in the else block, we take care of any addons that aren't from CF or TukUI.
+    # No version checking here, but it gives advanced users some leeway if they have a direct
+    # download link that we haven't implemented version checking for.
         else:
             print(f'Processing {key}...')
             url_list.append(name['dl_url'])
             to_be_updated.append(key)
 
-    # let user know which addons we're updating because feedback is nice
+    # Print list of addons to be updated for user feedback
     if len(to_be_updated) > 0:
         print(f'{colors.GREEN}The following addons will be updated:{colors.ENDC}')
         for addon in to_be_updated:
@@ -124,6 +129,8 @@ def main():
     dl_dir = get_download_path(firefox_download_directory)
     print(f'Using download directory at {colors.GREEN}{dl_dir}{colors.ENDC}')
 
+    # create temporary addon folder per OS, since WoW capitalizes its folders
+    # differently depending on OS present
     if os.name == 'nt':
         dl_dir_addons = os.path.join(dl_dir, 'AddOns')
     else:
@@ -137,8 +144,8 @@ def main():
     for filename in os.listdir(dl_dir):
         dl_dir_count += 1
 
-    # Target number of files/folders in Downloads directory equals (number of items)
-    # currently in the folder plus the (number of items in url_list[])
+    # Target number of files/folders in Downloads directory equals (dl_dir_count)
+    # currently in the folder plus the number of items in url_list[]
     dl_dir_target = dl_dir_count + len(url_list)
 
     ##############
@@ -151,7 +158,8 @@ def main():
     # time if users are on a slow connection. 
     #############
 
-    # open each download page to trigger the download
+    # open each download page to trigger the download & wait predetermined
+    # time for dl to start
     for url in url_list:
         print(f'Opening {colors.GREEN}{url}{colors.ENDC}')
         webbrowser.open_new_tab(url)
@@ -180,11 +188,12 @@ def main():
 
     addon_path = get_addon_path(addon_zips, wow_addon_directory)
 
-    # move addon temp dir and overwrite WoW addon dir
+    # move addon temp dir and overwrite WoW's addon dir
     # in the except block, we've gone back and forth over whether to clean up the downloaded
-    # files and the unzipped, temp addons folder. If we've gotten this far, it seems dumb to delete
-    # everything we've just downloaded. On the other hand, a graceful failure should leave the
-    # system in the same state as it was before it ran. Problem for another day.
+    # files and the unzipped, temp addons folder if an exception is raised. If we've gotten this
+    # far, it seems dumb to delete everything we've just downloaded. On the other hand, a 
+    # graceful failure should leave the system in the same state as it was before it ran. 
+    # Problem for another day.
     try:
         shutil.copytree(dl_dir_addons, addon_path, dirs_exist_ok=True)
     except Exception:
