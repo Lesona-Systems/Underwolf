@@ -78,7 +78,7 @@ def main():
     # If we've got different last_updated times, push addon to url_list[]
     # and update last_updated in addon_list.json.
     # Suprisingly, let's thank CF for tracking "last updated" in Unix time
-    # in its front end so we don't have to do any conversions. :)
+    # in its legaccy front end so we don't have to do any conversions while it's still up.
     for key in addon_dict.keys():
         name = addon_dict[key]
         if name['location'] == 'cf':
