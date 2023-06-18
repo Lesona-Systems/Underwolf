@@ -71,6 +71,7 @@ def main():
 
     # initialize empty lists for addons (url_list[]) and user feedback (to_be_updated[])
     url_list = []
+    tukui_url_list = []
     to_be_updated = []
 
     # read addon keys into dict. For each CF addon, call get_cf_update_time() and
@@ -97,7 +98,7 @@ def main():
             current_version = get_version_elvui(name['anchor_link'], ublock_xpi_path)
             if current_version != name['current_version']:
                 dl_url = (f"{name['dl_url']}")
-                url_list.append(dl_url)
+                tukui_url_list.append(dl_url)
                 to_be_updated.append(key)
                 name['current_version'] = current_version
         elif name['location'] == 'tukui':
@@ -105,7 +106,7 @@ def main():
             current_version = get_version_tukui(name['anchor_link'], ublock_xpi_path)
             if current_version != name['current_version']:
                 dl_url = (f"{name['dl_url']}")
-                url_list.append(dl_url)
+                tukui_url_list.append(dl_url)
                 to_be_updated.append(key)
                 name['current_version'] = current_version
     # in the else block, we take care of any addons that aren't from CF or TukUI.
@@ -146,7 +147,7 @@ def main():
 
     # Target number of files/folders in Downloads directory equals (dl_dir_count)
     # currently in the folder plus the number of items in url_list[]
-    dl_dir_target = dl_dir_count + len(url_list)
+    dl_dir_target = dl_dir_count + len(url_list) +len(tukui_url_list)
 
     ##############
     # Note: the following REQUIRES uBlock Origin - it fast forwards
@@ -166,6 +167,11 @@ def main():
         sleep(2)
         dl_dir_count += 1
     sleep(3) # Default is 3 for fast connections (over 25Mbs)
+
+    for url in tukui_url_list:
+        print(f'Opening {colors.GREEN}{url}{colors.ENDC}')
+        download_tuk_addon()
+        dl_dir_count += 1
 
     addon_zips = []
 
@@ -288,7 +294,11 @@ def start_browser():
     opts.add_argument('--headless')
     driver = webdriver.Firefox(options=opts)
     return driver
-    
+
+def start_visible_browser():
+    driver = webdriver.Firefox()
+    return driver
+
 def get_cf_update_time(cf_url, ublock_xpi_path):
     '''Start an instance of the Selenium browser, activate the uBlock origin .xpi file
     from the provided ublock_xpi_path, navigate to the provided curseforge url (cf_url),
@@ -364,6 +374,23 @@ def get_version_tukui(tukui_url, ublock_xpi_path):
     driver.close()
 
     return current_version
+
+def download_tuk_addon(elv_url, ublock_xpi_path):
+    driver = start_visible_browser()
+
+    if os.name == 'nt':
+        # Windows panics if we don't pass this as a raw string
+        ublock = fr"{ublock_xpi_path}"
+    else:
+        ublock = ublock_xpi_path
+
+    driver.install_addon(ublock)
+    driver.get(elv_url)
+    WebDriverWait(driver, 20).until(EC.visibility_of_all_elements_located((By.XPATH, '//*[@id="download-button"]')))
+    driver.findElement(By.id("download-button")).click();
+    sleep(5)
+
+    driver.close()
 
 if __name__ == '__main__':
     main()
