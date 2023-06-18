@@ -71,6 +71,7 @@ def main():
 
     # initialize empty lists for addons (url_list[]) and user feedback (to_be_updated[])
     url_list = []
+    tukui_url_list = []
     to_be_updated = []
 
     # read addon keys into dict. For each CF addon, call get_cf_update_time() and
@@ -92,20 +93,12 @@ def main():
                 continue
     # Here we do the same for TukUI and ElvUI, with the only difference being we check
     # current_version instead of current version time.
-        elif name['location'] == 'elvui':
-            print(f'Processing {key}...')
-            current_version = get_version_elvui(name['anchor_link'], ublock_xpi_path)
-            if current_version != name['current_version']:
-                dl_url = (f"{name['dl_url']}")
-                url_list.append(dl_url)
-                to_be_updated.append(key)
-                name['current_version'] = current_version
         elif name['location'] == 'tukui':
             print(f'Processing {key}...')
-            current_version = get_version_tukui(name['anchor_link'], ublock_xpi_path)
+            current_version = get_version_tuk_addon(name['anchor_link'], ublock_xpi_path)
             if current_version != name['current_version']:
                 dl_url = (f"{name['dl_url']}")
-                url_list.append(dl_url)
+                tukui_url_list.append(dl_url)
                 to_be_updated.append(key)
                 name['current_version'] = current_version
     # in the else block, we take care of any addons that aren't from CF or TukUI.
@@ -146,7 +139,7 @@ def main():
 
     # Target number of files/folders in Downloads directory equals (dl_dir_count)
     # currently in the folder plus the number of items in url_list[]
-    dl_dir_target = dl_dir_count + len(url_list)
+    dl_dir_target = dl_dir_count + len(url_list) +len(tukui_url_list)
 
     ##############
     # Note: the following REQUIRES uBlock Origin - it fast forwards
@@ -166,6 +159,11 @@ def main():
         sleep(2)
         dl_dir_count += 1
     sleep(3) # Default is 3 for fast connections (over 25Mbs)
+
+    for url in tukui_url_list:
+        print(f'Opening {colors.GREEN}{url}{colors.ENDC}')
+        download_tuk_addon(url, ublock_xpi_path)
+        dl_dir_count += 1
 
     addon_zips = []
 
@@ -288,7 +286,11 @@ def start_browser():
     opts.add_argument('--headless')
     driver = webdriver.Firefox(options=opts)
     return driver
-    
+
+def start_visible_browser():
+    driver = webdriver.Firefox()
+    return driver
+
 def get_cf_update_time(cf_url, ublock_xpi_path):
     '''Start an instance of the Selenium browser, activate the uBlock origin .xpi file
     from the provided ublock_xpi_path, navigate to the provided curseforge url (cf_url),
@@ -310,9 +312,9 @@ def get_cf_update_time(cf_url, ublock_xpi_path):
 
     return last_updated
 
-def get_version_elvui(elv_url, ublock_xpi_path):
+def get_version_tuk_addon(tuk_url, ublock_xpi_path):
     '''Start an instance of the Selenium browser, activate the uBlock origin .xpi file
-    from the provided ublock_xpi_path, navigate to the Tukui Homepage url (elv_url),
+    from the provided ublock_xpi_path, navigate to the Tukui Homepage url (tuk_url),
     and grab and return the addon's version number from the url.'''
     driver = start_browser()
 
@@ -323,14 +325,13 @@ def get_version_elvui(elv_url, ublock_xpi_path):
         ublock = ublock_xpi_path
 
     driver.install_addon(ublock)
-    driver.get(elv_url)
+    driver.get(tuk_url)
 
-    # Wait for ElvUI version number to be visable, then grab it from tukui.org/welcome.php
-    # There's always the possibility that Tukui changes the location of the version number.
-    # If that happens, the XPATH below will break.
+    # Wait for addon version number to be visable, then grab it from the download button.
     version_list = [my_elem.get_attribute("innerText") for my_elem in WebDriverWait(driver, 20).until(EC.visibility_of_all_elements_located((By.XPATH, '//*[@id="download-button"]')))]
     # the above returns a list by default, so reassign "version" to the the first element in the list.
     version_item = version_list[0]
+
     version_split = version_item.split()
     current_version = (version_split[-1])
 
@@ -338,32 +339,22 @@ def get_version_elvui(elv_url, ublock_xpi_path):
 
     return current_version
 
-def get_version_tukui(tukui_url, ublock_xpi_path):
-    '''Start an instance of the Selenium browser, activate the uBlock origin .xpi file
-    from the provided ublock_xpi_path, navigate to the Tukui Homepage url (elv_url),
-    and grab and return the addon's version number from the url.'''
-    driver = start_browser()
+def download_tuk_addon(tuk_url, ublock_xpi_path):
+    driver = start_visible_browser()
 
     if os.name == 'nt':
-        # Windows panics if we don't pass this as a raw string
         ublock = fr"{ublock_xpi_path}"
     else:
         ublock = ublock_xpi_path
 
     driver.install_addon(ublock)
-    driver.get(tukui_url)
+    driver.get(tuk_url)
+    WebDriverWait(driver, 20).until(EC.visibility_of_all_elements_located((By.XPATH, '//*[@id="download-button"]')))
+    sleep(2)
+    driver.find_element(By.XPATH, '//*[@id="download-button"]').click();
+    sleep(5)
 
-    # Wait for ElvUI version number to be visable, then grab it from tukui.org/welcome.php
-    # There's always the possibility that Tukui changes the location of the version number.
-    # If that happens, the XPATH below will break.
-    current_version = [my_elem.get_attribute("innerText") for my_elem in WebDriverWait(driver, 20).until(EC.visibility_of_all_elements_located((By.XPATH, "/html/body/div[2]/div/div/ul/li/div[4]/div/a[1]/span")))]
-
-    # the above returns a list by default, so reassign "version" to the the first element in the list
-    current_version = (current_version[0])
-    
     driver.close()
-
-    return current_version
 
 if __name__ == '__main__':
     main()
