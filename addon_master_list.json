@@ -3,66 +3,66 @@
         "location": "cf",
         "anchor_link": "https://legacy.curseforge.com/wow/addons/deadly-boss-mods",
         "dl_url": "https://legacy.curseforge.com/wow/addons/deadly-boss-mods/download",
-        "last_updated": "1681634082"
+        "last_updated": "1687074775"
     },
     "DBM-DUNGEONS": {
         "location": "cf",
         "anchor_link": "https://legacy.curseforge.com/wow/addons/deadly-boss-mods-dbm-dungeons",
         "dl_url": "https://legacy.curseforge.com/wow/addons/deadly-boss-mods-dbm-dungeons/download",
-        "last_updated": "1681971293"
+        "last_updated": "1687110239"
     },
     "DETAILS": {
         "location": "cf",
         "anchor_link": "https://legacy.curseforge.com/wow/addons/details",
         "dl_url": "https://legacy.curseforge.com/wow/addons/details/download",
-        "last_updated": "1681755967"
+        "last_updated": "1686779182"
     },
     "WEAKAURAS2": {
         "location": "cf",
         "anchor_link": "https://legacy.curseforge.com/wow/addons/weakauras-2",
         "dl_url": "https://legacy.curseforge.com/wow/addons/weakauras-2/download",
-        "last_updated": "1681866726"
+        "last_updated": "1687073751"
     },
     "RARESCANNER": {
         "location": "cf",
         "anchor_link": "https://legacy.curseforge.com/wow/addons/rarescanner",
         "dl_url": "https://legacy.curseforge.com/wow/addons/rarescanner/download",
-        "last_updated": "1681319330"
+        "last_updated": "1686980259"
     },
     "PAWN": {
         "location": "cf",
         "anchor_link": "https://legacy.curseforge.com/wow/addons/pawn",
         "dl_url": "https://legacy.curseforge.com/wow/addons/pawn/download",
-        "last_updated": "1679940191"
+        "last_updated": "1683482327"
     },
     "HANDYNOTES": {
         "location": "cf",
         "anchor_link": "https://legacy.curseforge.com/wow/addons/handynotes",
         "dl_url": "https://legacy.curseforge.com/wow/addons/handynotes/download",
-        "last_updated": "1679471168"
+        "last_updated": "1683098071"
     },
     "HANDYNOTES_SL": {
         "location": "cf",
         "anchor_link": "https://legacy.curseforge.com/wow/addons/handynotes-shadowlands",
         "dl_url": "https://legacy.curseforge.com/wow/addons/handynotes-shadowlands/download",
-        "last_updated": "1679420652"
+        "last_updated": "1683075466"
     },
     "ALLTHETHINGS": {
         "location": "cf",
         "anchor_link": "https://legacy.curseforge.com/wow/addons/all-the-things",
         "dl_url": "https://legacy.curseforge.com/wow/addons/all-the-things/download",
-        "last_updated": "1681971451"
+        "last_updated": "1687120464"
     },
     "SIMULATIONCRAFT": {
         "location": "cf",
         "anchor_link": "https://legacy.curseforge.com/wow/addons/simulationcraft",
         "dl_url": "https://legacy.curseforge.com/wow/addons/simulationcraft/download",
-        "last_updated": "1681838984"
+        "last_updated": "1686681243"
     },
     "ELVUI": {
         "location": "tukui",
         "anchor_link": "https://tukui.org/elvui",
         "dl_url": "https://tukui.org/elvui",
-        "current_version": "13.29"
+        "current_version": "13.34"
     }
 }
