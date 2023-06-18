@@ -61,8 +61,8 @@
     },
     "ELVUI": {
         "location": "tukui",
-        "anchor_link": "https://www.tukui.org/welcome.php",
-        "dl_url": "https://www.tukui.org/downloads/elvui#",
+        "anchor_link": "https://tukui.org/elvui",
+        "dl_url": "https://tukui.org/elvui",
         "current_version": "13.29"
     }
 }

@@ -162,7 +162,7 @@ def main():
 
     for url in tukui_url_list:
         print(f'Opening {colors.GREEN}{url}{colors.ENDC}')
-        download_tuk_addon()
+        download_tuk_addon(url, ublock_xpi_path)
         dl_dir_count += 1
 
     addon_zips = []
@@ -331,6 +331,7 @@ def get_version_tuk_addon(tuk_url, ublock_xpi_path):
     version_list = [my_elem.get_attribute("innerText") for my_elem in WebDriverWait(driver, 20).until(EC.visibility_of_all_elements_located((By.XPATH, '//*[@id="download-button"]')))]
     # the above returns a list by default, so reassign "version" to the the first element in the list.
     version_item = version_list[0]
+
     version_split = version_item.split()
     current_version = (version_split[-1])
 
@@ -349,7 +350,8 @@ def download_tuk_addon(tuk_url, ublock_xpi_path):
     driver.install_addon(ublock)
     driver.get(tuk_url)
     WebDriverWait(driver, 20).until(EC.visibility_of_all_elements_located((By.XPATH, '//*[@id="download-button"]')))
-    driver.findElement(By.id("download-button")).click();
+    sleep(2)
+    driver.find_element(By.XPATH, '//*[@id="download-button"]').click();
     sleep(5)
 
     driver.close()

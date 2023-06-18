@@ -90,7 +90,7 @@ Copy the following and add it to your addons_master_list.json and the script wil
     "ELVUI" : {
         "location" : "elvui",
         "anchor_link" : "https://www.tukui.org/elvui",
-        "dl_url" : "https://www.tukui.org/downloads/elvui#",
+        "dl_url" : "https://www.tukui.org/elvui",
         "current_version" : ""
     }
 
@@ -100,7 +100,7 @@ Copy the following and add it to your addons_master_list.json and the script wil
     "TUKUI" : {
         "location" : "tukui",
         "anchor_link" : "https://www.tukui.org/tukui",
-        "dl_url" : "https://www.tukui.org/downloads/tukui#",
+        "dl_url" : "https://tukui.org/tukui",
         "current_version" : ""
     }
 
