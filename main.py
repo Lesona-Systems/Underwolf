@@ -312,9 +312,9 @@ def get_cf_update_time(cf_url, ublock_xpi_path):
 
     return last_updated
 
-def get_version_tuk_addon(elv_url, ublock_xpi_path):
+def get_version_tuk_addon(tuk_url, ublock_xpi_path):
     '''Start an instance of the Selenium browser, activate the uBlock origin .xpi file
-    from the provided ublock_xpi_path, navigate to the Tukui Homepage url (elv_url),
+    from the provided ublock_xpi_path, navigate to the Tukui Homepage url (tuk_url),
     and grab and return the addon's version number from the url.'''
     driver = start_browser()
 
@@ -325,7 +325,7 @@ def get_version_tuk_addon(elv_url, ublock_xpi_path):
         ublock = ublock_xpi_path
 
     driver.install_addon(ublock)
-    driver.get(elv_url)
+    driver.get(tuk_url)
 
     # Wait for addon version number to be visable, then grab it from the download button.
     version_list = [my_elem.get_attribute("innerText") for my_elem in WebDriverWait(driver, 20).until(EC.visibility_of_all_elements_located((By.XPATH, '//*[@id="download-button"]')))]
@@ -338,7 +338,7 @@ def get_version_tuk_addon(elv_url, ublock_xpi_path):
 
     return current_version
 
-def download_tuk_addon(elv_url, ublock_xpi_path):
+def download_tuk_addon(tuk_url, ublock_xpi_path):
     driver = start_visible_browser()
 
     if os.name == 'nt':
@@ -347,7 +347,7 @@ def download_tuk_addon(elv_url, ublock_xpi_path):
         ublock = ublock_xpi_path
 
     driver.install_addon(ublock)
-    driver.get(elv_url)
+    driver.get(tuk_url)
     WebDriverWait(driver, 20).until(EC.visibility_of_all_elements_located((By.XPATH, '//*[@id="download-button"]')))
     driver.findElement(By.id("download-button")).click();
     sleep(5)
