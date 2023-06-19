@@ -56,7 +56,7 @@ def main():
 
 
     master_list = 'addon_master_list.json'
-    # check for addon_master_list.json. If it exists, back it up to backup_list.json. If not, inform user.
+    # check for addon_master_list.json. If it exists, back it up to backup_list.json. If addon_master_list does not exist, inform user and direct them to the documentation.
     if os.path.exists('addon_master_list.json'):
         make_backup(master_list, 'backup_list.json')
     else:
