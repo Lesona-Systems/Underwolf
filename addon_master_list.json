@@ -3,13 +3,13 @@
         "location": "cf",
         "anchor_link": "https://legacy.curseforge.com/wow/addons/deadly-boss-mods",
         "dl_url": "https://legacy.curseforge.com/wow/addons/deadly-boss-mods/download",
-        "last_updated": "1687074775"
+        "last_updated": "1687333322"
     },
     "DBM-DUNGEONS": {
         "location": "cf",
         "anchor_link": "https://legacy.curseforge.com/wow/addons/deadly-boss-mods-dbm-dungeons",
         "dl_url": "https://legacy.curseforge.com/wow/addons/deadly-boss-mods-dbm-dungeons/download",
-        "last_updated": "1687110239"
+        "last_updated": "1687324230"
     },
     "DETAILS": {
         "location": "cf",
@@ -21,13 +21,13 @@
         "location": "cf",
         "anchor_link": "https://legacy.curseforge.com/wow/addons/weakauras-2",
         "dl_url": "https://legacy.curseforge.com/wow/addons/weakauras-2/download",
-        "last_updated": "1687073751"
+        "last_updated": "1687302360"
     },
     "RARESCANNER": {
         "location": "cf",
         "anchor_link": "https://legacy.curseforge.com/wow/addons/rarescanner",
         "dl_url": "https://legacy.curseforge.com/wow/addons/rarescanner/download",
-        "last_updated": "1686980259"
+        "last_updated": "1687272558"
     },
     "PAWN": {
         "location": "cf",
@@ -51,7 +51,7 @@
         "location": "cf",
         "anchor_link": "https://legacy.curseforge.com/wow/addons/all-the-things",
         "dl_url": "https://legacy.curseforge.com/wow/addons/all-the-things/download",
-        "last_updated": "1687120464"
+        "last_updated": "1687309061"
     },
     "SIMULATIONCRAFT": {
         "location": "cf",
@@ -63,6 +63,6 @@
         "location": "tukui",
         "anchor_link": "https://tukui.org/elvui",
         "dl_url": "https://tukui.org/elvui",
-        "current_version": "13.34"
+        "current_version": "13.35"
     }
 }
