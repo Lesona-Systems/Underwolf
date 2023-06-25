@@ -3,31 +3,31 @@
         "location": "cf",
         "anchor_link": "https://legacy.curseforge.com/wow/addons/deadly-boss-mods",
         "dl_url": "https://legacy.curseforge.com/wow/addons/deadly-boss-mods/download",
-        "last_updated": "1687333322"
+        "last_updated": "1687583286"
     },
     "DBM-DUNGEONS": {
         "location": "cf",
         "anchor_link": "https://legacy.curseforge.com/wow/addons/deadly-boss-mods-dbm-dungeons",
         "dl_url": "https://legacy.curseforge.com/wow/addons/deadly-boss-mods-dbm-dungeons/download",
-        "last_updated": "1687324230"
+        "last_updated": "1687390123"
     },
     "DETAILS": {
         "location": "cf",
         "anchor_link": "https://legacy.curseforge.com/wow/addons/details",
         "dl_url": "https://legacy.curseforge.com/wow/addons/details/download",
-        "last_updated": "1686779182"
+        "last_updated": "1687565509"
     },
     "WEAKAURAS2": {
         "location": "cf",
         "anchor_link": "https://legacy.curseforge.com/wow/addons/weakauras-2",
         "dl_url": "https://legacy.curseforge.com/wow/addons/weakauras-2/download",
-        "last_updated": "1687302360"
+        "last_updated": "1687453030"
     },
     "RARESCANNER": {
         "location": "cf",
         "anchor_link": "https://legacy.curseforge.com/wow/addons/rarescanner",
         "dl_url": "https://legacy.curseforge.com/wow/addons/rarescanner/download",
-        "last_updated": "1687272558"
+        "last_updated": "1687497923"
     },
     "PAWN": {
         "location": "cf",
@@ -51,13 +51,13 @@
         "location": "cf",
         "anchor_link": "https://legacy.curseforge.com/wow/addons/all-the-things",
         "dl_url": "https://legacy.curseforge.com/wow/addons/all-the-things/download",
-        "last_updated": "1687309061"
+        "last_updated": "1687539308"
     },
     "SIMULATIONCRAFT": {
         "location": "cf",
         "anchor_link": "https://legacy.curseforge.com/wow/addons/simulationcraft",
         "dl_url": "https://legacy.curseforge.com/wow/addons/simulationcraft/download",
-        "last_updated": "1686681243"
+        "last_updated": "1687363709"
     },
     "ELVUI": {
         "location": "tukui",
