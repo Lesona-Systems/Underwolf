@@ -4,6 +4,7 @@ import webbrowser
 import shutil
 import json
 import configparser
+import argparse
 from time import sleep, time
 from selenium import webdriver
 from selenium.webdriver import FirefoxOptions
@@ -19,6 +20,10 @@ class colors:
     BOLD = '\033[1m'
 
 def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--forceupdate', help='Force Underwolf to download all addons in addon_master_list.json.',
+                        action='store_true')
+    args = parser.parse_args()
 
     bypass_warning = ""
     print(r"""
@@ -74,40 +79,53 @@ def main():
     tukui_url_list = []
     to_be_updated = []
 
-    # read addon keys into dict. For each CF addon, call get_cf_update_time() and
-    # compare to last_updated in addon_master_list. If it's the same, move on.
-    # If we've got different last_updated times, push addon to url_list[]
-    # and update last_updated in addon_list.json.
-    # Suprisingly, let's thank CF for tracking "last updated" in Unix time
-    # in its legaccy front end so we don't have to do any conversions while it's still up.
-    for key in addon_dict.keys():
-        name = addon_dict[key]
-        if name['location'] == 'cf':
-            print(f'Processing {key}...')
-            current_version_time = get_cf_update_time(name['anchor_link'], ublock_xpi_path)
-            if current_version_time != name['last_updated']:
+    # if --forceupdate is provided as an optional argument, add download them ALL
+    if args.forceupdate:
+        for key in addon_dict.keys():
+            if name['location'] == 'cf':
+                name = addon_dict[key]
                 url_list.append(name['dl_url'])
                 to_be_updated.append(key)
-                name['last_updated'] = current_version_time
-            else:
-                continue
-    # Here we do the same for TukUI and ElvUI, with the only difference being we check
-    # current_version instead of current version time.
-        elif name['location'] == 'tukui':
-            print(f'Processing {key}...')
-            current_version = get_version_tuk_addon(name['anchor_link'], ublock_xpi_path)
-            if current_version != name['current_version']:
+            elif name['location'] == 'tukui':
                 dl_url = (f"{name['dl_url']}")
                 tukui_url_list.append(dl_url)
                 to_be_updated.append(key)
-                name['current_version'] = current_version
-    # in the else block, we take care of any addons that aren't from CF or TukUI.
-    # No version checking here, but it gives advanced users some leeway if they have a direct
-    # download link that we haven't implemented version checking for.
-        else:
-            print(f'Processing {key}...')
-            url_list.append(name['dl_url'])
-            to_be_updated.append(key)
+            else:
+                url_list.append(name['dl_url'])
+                to_be_updated.append(key)
+    else:
+        # read addon keys into dict. For each CF addon, call get_cf_update_time() and
+        # compare to last_updated in addon_master_list. If it's the same, move on.
+        # If we've got different last_updated times, push addon to url_list[]
+        # and update last_updated in addon_list.json.
+        # Suprisingly, let's thank CF for tracking "last updated" in Unix time
+        # in its legacy front end so we don't have to do any conversions while it's still up.
+        for key in addon_dict.keys():
+            name = addon_dict[key]
+            if name['location'] == 'cf':
+                print(f'Processing {key}...')
+                current_version_time = get_cf_update_time(name['anchor_link'], ublock_xpi_path)
+                if current_version_time != name['last_updated']:
+                    url_list.append(name['dl_url'])
+                    to_be_updated.append(key)
+                    name['last_updated'] = current_version_time
+        # Here we do the same for TukUI and ElvUI, with the only difference being we check
+        # current_version instead of current version time.
+            elif name['location'] == 'tukui':
+                print(f'Processing {key}...')
+                current_version = get_version_tuk_addon(name['anchor_link'], ublock_xpi_path)
+                if current_version != name['current_version']:
+                    dl_url = (f"{name['dl_url']}")
+                    tukui_url_list.append(dl_url)
+                    to_be_updated.append(key)
+                    name['current_version'] = current_version
+        # in the else block, we take care of any addons that aren't from CF or TukUI.
+        # No version checking here, but it gives advanced users some leeway if they have a direct
+        # download link that we haven't implemented version checking for.
+            else:
+                print(f'Processing {key}...')
+                url_list.append(name['dl_url'])
+                to_be_updated.append(key)
 
     # Print list of addons to be updated for user feedback
     if len(to_be_updated) > 0:
