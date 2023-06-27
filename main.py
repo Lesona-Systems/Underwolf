@@ -62,7 +62,7 @@ def main():
 
 
     master_list = 'addon_master_list.json'
-    # check for addon_master_list.json. If it exists, back it up to backup_list.json. If addon_master_list does not exist, inform user and direct them to the documentation.
+    # check for addon_master_list.json. If it exists, back it up to backup_list.json. If addon_master_list does not exist, inform user, direct them to the documentation, and gracefully exit.
     if os.path.exists('addon_master_list.json'):
         make_backup(master_list, 'backup_list.json')
     else:
@@ -71,7 +71,7 @@ def main():
         print(f'{colors.FAIL}Quitting!{colors.ENDC}')
         quit()
 
-    # read addon list to dict
+    # read addon list into addon_dict
     with open(master_list) as master:
         addon_dict = json.load(master)
 
@@ -116,7 +116,8 @@ def main():
                     name['current_version'] = current_version
             # in the else block, we take care of any addons that aren't from CF or TukUI.
             # No version checking here, but it gives advanced users some leeway if they have a direct
-            # download link that we haven't implemented version checking for.
+            # download link that we haven't implemented version checking for, like for TradeSkillMaster
+            # or Github releases.
             else:
                 print(f'Processing {key}...')
                 url_list.append(name['dl_url'])
@@ -164,14 +165,13 @@ def main():
     # time if users are on a slow connection. 
     #############
 
-    # open each download page to trigger the download & wait predetermined
-    # time for dl to start
+    # open each download page to trigger the download & sleep until dl starts
     for url in url_list:
         print(f'Opening {colors.GREEN}{url}{colors.ENDC}')
         webbrowser.open_new_tab(url)
         sleep(2)
         dl_dir_count += 1
-    sleep(3) # Default is 3 for fast connections (over 25Mbs)
+    sleep(3) # A conservative default is (3) for fast connections (over 25Mbs)
 
     for url in tukui_url_list:
         print(f'Opening {colors.GREEN}{url}{colors.ENDC}')
@@ -245,12 +245,13 @@ def clean_downloads(list):
         os.remove(filename)
 
 def clean_temp_addon_folder(path):
+        '''Recursively removes the given directory.'''
         print(f'Cleaning {colors.GREEN}Temp Addon{colors.ENDC} folder...')
         shutil.rmtree(path)
 
 
 def get_download_path(path):
-    '''Determine system type: Windows, MacOS, or Linux. For Windows, get the Downloads folder GUID from the registry and
+    '''Determine system type: For Windows, get the Downloads folder GUID from the registry and
         programatically get the "Downloads" path. For MacOS/Linux, expand os.path using os.path.expanduser and 
         join with "Downloads"'''
     # Just for the record, this is needlessly complicated
@@ -270,6 +271,8 @@ def get_download_path(path):
         return path
 
 def get_addon_path(addon_list, wow_addon_directory):
+    '''Determine system type and check for World of Warcraft addon directory. If directory doesn't
+     exist, inform user.  '''
     if os.name == 'nt':
         if os.path.isdir(wow_addon_directory):
             return wow_addon_directory
@@ -301,6 +304,8 @@ def start_browser():
     return driver
 
 def start_visible_browser():
+    '''Start a full browser instance of Selenium and return the browser instance
+    that accepts Selenium methods.'''
     driver = webdriver.Firefox()
     return driver
 
@@ -353,6 +358,8 @@ def get_version_tuk_addon(tuk_url, ublock_xpi_path):
     return current_version
 
 def download_tuk_addon(tuk_url, ublock_xpi_path):
+    '''Start a visible instance of a Selenium browser, navigate to either an ElvUI
+    or TukUI download link, call click on the button, and wait for the addon to download.'''
     driver = start_visible_browser()
 
     if os.name == 'nt':
