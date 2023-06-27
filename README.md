@@ -81,9 +81,11 @@ Add Curseforge addons to addon_master_list.json like so:
     "DBM" : {
         "location" : "cf",
         "anchor_link" : "https://legacy.curseforge.com/wow/addons/deadly-boss-mods",
-        "dl_url" : "https://legacy.curseforge.com/wow/addons/deadly-boss-mods/download",
+        "dl_url" : "https://curseforge.com/wow/addons/deadly-boss-mods/download",
         "last_updated" : ""
     },
+
+Underwolf is currently using the legacy Curseforge website for version tracking since it gives the Unix epoch that the addon was updated. The new CF website only specifies if the addon has been updated that day.
 
 #### Adding ElvUI 
 Copy the following and add it to your addons_master_list.json and the script will take care of the rest.
