@@ -324,11 +324,17 @@ def get_cf_update_time(cf_url, ublock_xpi_path):
     driver.install_addon(ublock)
     driver.get(cf_url)
 
-    xpath = driver.find_element(By.XPATH, "//abbr[@class='tip standard-date standard-datetime']")
-    last_updated = xpath.get_attribute("data-epoch")
-    driver.close()
+    if "legacy.curseforge" in cf_url:
+        xpath = driver.find_element(By.XPATH, "//abbr[@class='tip standard-date standard-datetime']")
+        last_updated = xpath.get_attribute("data-epoch")
+        driver.close()
 
-    return last_updated
+        return last_updated
+    else:
+        last_updated = driver.find_element(By.XPATH, "/html/body/div[1]/main/div[2]/aside/div/section[1]/dl/dd[2]/span").text
+        driver.close()
+
+        return last_updated
 
 def get_version_tuk_addon(tuk_url, ublock_xpi_path):
     '''Start an instance of the Selenium browser, activate the uBlock origin .xpi file
