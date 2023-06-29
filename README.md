@@ -6,7 +6,7 @@ Underwolf is a Python script to update World of Warcraft addons without the need
 
 Underwolf utilizes Python's built-in webbrowser library to navigate to legacy [CurseForge](https://legacy.curseforge.com/) download pages (as well as other direct download URLs, such as [Tukui](https://legacy.tukui.org) and [Trade Skill Master](https://legacy.tradeskillmaster.com/)) and download the specified addons, unzip them, and move them into the WoW addon folder. The script utilizes Selenium for version checking (version checking is only implemented on CurseForge addons and ElvUI).
 
-Feel free to run main.py with the '--forceupdate' flag to skip all version checking and download every addon in addon_master_list.json (useful for initial installs of WoW as well as patch days, where several versions of an addon can be released on the same day).
+Feel free to run main.py with the `--forceupdate` flag to skip all version checking and download every addon in addon_master_list.json (useful for initial installs of WoW as well as patch days, where several versions of an addon can be released on the same day).
 
 **The script works on MacOS, Windows, and Linux.**
 
