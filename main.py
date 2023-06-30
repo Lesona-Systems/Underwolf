@@ -24,8 +24,7 @@ def main():
     parser.add_argument('--forceupdate', help='Force Underwolf to download all addons in addon_master_list.json.',
                         action='store_true')
     args = parser.parse_args()
-    print(args.forceupdate)
-
+    
     bypass_warning = ""
     print(r"""
      _    _               _                                    _    __ 
@@ -221,10 +220,10 @@ def main():
     update_master(addon_dict, master_list)
     print(f'{final_count} addons updated. \n{colors.GREEN}Script completed successfully!{colors.ENDC} See you in Azeroth!')
 
-def update_master(dict, file):
+def update_master(addon_dict, file):
     '''Write input dictionary to file'''
     with open(file, 'w') as json_file:
-        json.dump(dict, json_file, indent=4)
+        json.dump(addon_dict, json_file, indent=4)
 
 def make_backup(file, filename):
     '''Copy file to filename'''
