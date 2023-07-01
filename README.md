@@ -8,7 +8,7 @@ Underwolf utilizes Python's built-in webbrowser library to navigate to legacy [C
 
 Feel free to run main.py with the `--forceupdate` flag to skip all version checking and download every addon in addon_master_list.json (useful for initial installs of WoW as well as patch days, where several versions of an addon can be released on the same day).
 
-**The script works on MacOS, Windows, and Linux.**
+**The script works on MacOS, Windows, and Linux (tested with Lutris, but should work with whichever Linux launcher you use).**
 
 
 ## Requirements
