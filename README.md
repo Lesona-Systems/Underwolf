@@ -78,7 +78,9 @@ Note that the script calls **taskkill** on all Firefox processes at the end to c
 ### Add addons to addons_master_list.json
 
 #### Adding Curseforge Addons
-Curseforge addons can use either a `legacy.curseforge.com` or `curseforge.com` URL for its anchor_link. Please note that if you choose to use the ***non-legacy Curseforge URL***, you will only be able to update the addon once per day without resorting to the `--forceupdate` flag. See [#24](https://github.com/Lesona-Systems/Underwolf/issues/24) for more information.
+Curseforge addons can use either a `legacy.curseforge.com` or `curseforge.com` URL for its anchor_link. `dl_url` **MUST** be a `curseforge.com` URL. No legacy URLs are accepted. 
+
+Please note that if you choose to use the ***non-legacy Curseforge URL***, you will only be able to update the addon once per day without resorting to the `--forceupdate` flag. See [#24](https://github.com/Lesona-Systems/Underwolf/issues/24) for more information.
 Add Curseforge addons to `addon_master_list.json` like so:
 
     "DBM" : {
