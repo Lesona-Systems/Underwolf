@@ -220,17 +220,17 @@ def main():
     update_master(addon_dict, master_list)
     print(f'{final_count} addons updated. \n{colors.GREEN}Script completed successfully!{colors.ENDC} See you in Azeroth!')
 
-def update_master(addon_dict, file):
-    '''Write input dictionary to file'''
+def update_master(dict, file):
+    '''Writes input {dictionary} to {file}.'''
     with open(file, 'w') as json_file:
         json.dump(addon_dict, json_file, indent=4)
 
 def make_backup(file, filename):
-    '''Copy file to filename'''
+    '''Copies {file} to {filename}'''
     shutil.copy(file, filename)
 
 def kill_firefox():
-    '''Kill all Firefox browser processes'''
+    '''Kills all Firefox browser processes.'''
     print('Killing browser processes...')
     if os.name == 'nt':
         os.system('taskkill /F /IM firefox.exe /T')
@@ -238,21 +238,21 @@ def kill_firefox():
         os.system('pkill -f firefox')
 
 def clean_downloads(list):
-    '''For filename in list, delete the file.'''
+    '''For {filename} in [list], delete [filename].'''
     print(f'Cleaning {colors.GREEN}Downloaded{colors.ENDC} zips...')
     for filename in list:
         os.remove(filename)
 
 def clean_temp_addon_folder(path):
-        '''Recursively removes the given directory.'''
+        '''Recursively removes the provided directory.'''
         print(f'Cleaning {colors.GREEN}Temp Addon{colors.ENDC} folder...')
         shutil.rmtree(path)
 
 
 def get_download_path(path):
-    '''Determine system type: For Windows, get the Downloads folder GUID from the registry and
-        programatically get the "Downloads" path. For MacOS/Linux, expand os.path using os.path.expanduser and 
-        join with "Downloads"'''
+    '''Determines OS type and assigns the correct default directory depending on OS: For Windows,
+        get the Downloads folder GUID from the registry and programatically get the "Downloads" path.
+        For MacOS/Linux, expand os.path using os.path.expanduser and join with "Downloads"'''
     # Just for the record, this is needlessly complicated
     # https://stackoverflow.com/questions/35851281/python-finding-the-users-downloads-folder
     if path == '':
@@ -270,8 +270,8 @@ def get_download_path(path):
         return path
 
 def get_addon_path(addon_list, wow_addon_directory):
-    '''Determine system type and check for World of Warcraft addon directory. If directory doesn't
-     exist, inform user.  '''
+    '''Determine OS type and check for  existing World of Warcraft addon directory. If directory doesn't
+     exist, inform user and quit gracefully.  '''
     if os.name == 'nt':
         if os.path.isdir(wow_addon_directory):
             return wow_addon_directory
