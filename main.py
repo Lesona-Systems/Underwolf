@@ -78,7 +78,7 @@ def main():
     url_list = []
     tukui_url_list = []
     to_be_updated = []
-
+    wago_url_list = []
     # if --forceupdate is provided as an optional argument, add download them ALL
     if args.forceupdate == True:
         for key in addon_dict.keys():
@@ -117,6 +117,14 @@ def main():
             # No version checking here, but it gives advanced users some leeway if they have a direct
             # download link that we haven't implemented version checking for, like for TradeSkillMaster
             # or Github releases.
+            elif name['location'] == 'wago':
+                print(f'Processing {key}...')
+                last_updated = get_wago_update_time(name['anchor_link'], ublock_xpi_path)
+                anchor_link = name['anchor_link']
+                if last_updated != name['last_updated']:
+                    wago_url_list.append(anchor_link)
+                    to_be_updated.append(key)
+                    name['last_updated'] = last_updated
             else:
                 print(f'Processing {key}...')
                 url_list.append(name['dl_url'])
@@ -138,7 +146,7 @@ def main():
     # create temporary addon folder per OS, since WoW capitalizes its folders
     # differently depending on OS present
     if os.name == 'nt':
-        dl_dir_addons = os.path.join(dl_dir, 'AddOns')
+        get_dl_ = os.path.join(dl_dir, 'AddOns')
     else:
         dl_dir_addons = os.path.join(dl_dir, 'Addons')
 
@@ -175,6 +183,11 @@ def main():
     for url in tukui_url_list:
         print(f'Opening {colors.GREEN}{url}{colors.ENDC}')
         download_tuk_addon(url, ublock_xpi_path)
+        dl_dir_count += 1
+
+    for url in wago_url_list:
+        print(f'Opening {colors.GREEN}{url}{colors.ENDC}')
+        dl_wago_addon(url, ublock_xpi_path)
         dl_dir_count += 1
 
     addon_zips = []
@@ -223,7 +236,7 @@ def main():
 def update_master(dict, file):
     '''Writes input {dictionary} to {file}.'''
     with open(file, 'w') as json_file:
-        json.dump(addon_dict, json_file, indent=4)
+        json.dump(dict, json_file, indent=4)
 
 def make_backup(file, filename):
     '''Copies {file} to {filename}'''
@@ -334,6 +347,69 @@ def get_cf_update_time(cf_url, ublock_xpi_path):
         driver.close()
 
         return last_updated
+    
+def get_wago_update_time(anchor_link, ublock_xpi_path):
+    '''Start an instance of the Selenium browser, activate the uBlock origin .xpi file
+    from the provided ublock_xpi_path, navigate to the Wago addon achnor URL
+    and grab and return the addon's version number from the url.'''
+    driver = start_browser()
+
+    if os.name == 'nt':
+        # Windows panics if we don't pass this as a raw string
+        ublock = fr"{ublock_xpi_path}"
+    else:
+        ublock = ublock_xpi_path
+
+    driver.install_addon(ublock)
+    driver.get(anchor_link)
+
+    # Wait for addon version number to be visable, then grab it from the download button.
+    version_list = [my_elem.get_attribute("innerText") for my_elem in WebDriverWait(driver, 20).until(EC.visibility_of_all_elements_located((By.XPATH, '/html/body/div[1]/div/div/div[3]/div/aside/div/div[1]/div[1]/span/time')))]
+    # the above returns a list by default, so reassign "version" to the the first element in the list.
+    version_item = version_list[0]
+
+    version_split = version_item.split()
+    current_version = (version_split[-1])
+
+    driver.close()
+
+
+def get_wago_dl_url(anchor_link ,ublock_xpi_path):
+    '''Start a visible instance of a Selenium browser, navigate to either an ElvUI
+    or TukUI download link, call click on the button, and wait for the addon to download.'''
+    driver = start_browser()
+
+    if os.name == 'nt':
+        ublock = fr"{ublock_xpi_path}"
+    else:
+        ublock = ublock_xpi_path
+
+    driver.install_addon(ublock)
+    driver.get(anchor_link)
+    WebDriverWait(driver, 20).until(EC.visibility_of_all_elements_located((By.XPATH, '/html/body/div[1]/div/div/div[3]/div/aside/div/div[2]/a[2]')))
+    last_updated = driver.find_element(By.XPATH, '/html/body/div[1]/div/div/div[3]/div/aside/div/div[2]/a[2]').get_attribute('href')
+    sleep(2)
+
+    driver.close()
+    return last_updated
+
+def dl_wago_addon(anchor_link, ublock_xpi_path):
+    driver = start_visible_browser()
+
+    if os.name == 'nt':
+        ublock = fr"{ublock_xpi_path}"
+    else:
+        ublock = ublock_xpi_path
+
+    driver.install_addon(ublock)
+    driver.get(anchor_link)
+    WebDriverWait(driver, 20).until(EC.visibility_of_all_elements_located((By.XPATH, '/html/body/div[1]/div/div/div[3]/div/aside/div/div[2]/a[2]')))
+    sleep(2)
+    driver.find_element(By.XPATH, '/html/body/div[1]/div/div/div[3]/div/aside/div/div[2]/a[2]').click();
+    sleep(5)
+
+    driver.close()
+    
 
 def get_version_tuk_addon(tuk_url, ublock_xpi_path):
     '''Start an instance of the Selenium browser, activate the uBlock origin .xpi file
