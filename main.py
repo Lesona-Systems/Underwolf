@@ -146,9 +146,19 @@ def main():
     # create temporary addon folder per OS, since WoW capitalizes its folders
     # differently depending on OS present
     if os.name == 'nt':
-        get_dl_ = os.path.join(dl_dir, 'AddOns')
+        temp_addon_dir = "AddOns"
+        dl_dir_addons = os.path.join(dl_dir, temp_addon_dir)
+        try:
+            os.mkdir(dl_dir_addons)
+        except FileExistsError:
+            pass
     else:
-        dl_dir_addons = os.path.join(dl_dir, 'Addons')
+        temp_addon_dir = "Addons"
+        dl_dir_addons = os.path.join(dl_dir, temp_addon_dir)
+        try:
+            os.mkdir(dl_dir_addons)
+        except FileExistsError:
+            pass
 
     # Intialize dl_dir_count to count number of files currently in Download directory
     # so we can infer when we're done. I haven't found a way to detect the difference
