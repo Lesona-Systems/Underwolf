@@ -75,12 +75,13 @@ In Linux, move the geckodriver you've downloaded to:
 
 Note that the script calls **taskkill** on all Firefox processes at the end to clean up.
 
-### Add addons to addons_master_list.json
+### Add Curseforge addons to addon_master_list.json
 
 #### Adding Curseforge Addons
 Curseforge addons can use either a `legacy.curseforge.com` or `curseforge.com` URL for its anchor_link. `dl_url` **MUST** be a `curseforge.com` URL. No legacy URLs are accepted. 
 
 Please note that if you choose to use the ***non-legacy Curseforge URL***, you will only be able to update the addon once per day without resorting to the `--forceupdate` flag. See [#24](https://github.com/Lesona-Systems/Underwolf/issues/24) for more information.
+
 Add Curseforge addons to `addon_master_list.json` like so:
 
     "DBM" : {
@@ -92,8 +93,10 @@ Add Curseforge addons to `addon_master_list.json` like so:
 
 Underwolf is currently using the legacy Curseforge website for version tracking since it gives the Unix epoch that the addon was updated. The new CF website only specifies if the addon has been updated that day.
 
+### Add TukUI addons (TukUI & ElvUI) to addon_master_list.json
+
 #### Adding ElvUI 
-Copy the following and add it to your `addons_master_list.json` and the script will take care of the rest.
+Copy the following and add it to your `addon_master_list.json` and the script will take care of the rest:
 
     "ELVUI" : {
         "location" : "elvui",
@@ -103,13 +106,24 @@ Copy the following and add it to your `addons_master_list.json` and the script w
     }
 
 #### Adding TukUI
-Copy the following and add it to your `addons_master_list.json` and the script will take care of the rest.
+Copy the following and add it to your `addon_master_list.json` and the script will take care of the rest:
 
     "TUKUI" : {
         "location" : "tukui",
         "anchor_link" : "https://www.tukui.org/tukui",
         "dl_url" : "https://tukui.org/tukui",
         "current_version" : ""
+    }
+
+### Adding Wago.io addons to addon_master_list.json
+
+Copy the following and add it to your `addon_master_list.json` like so:
+
+    "DBM": {
+        "location": "wago",
+        "anchor_link": "https://addons.wago.io/addons/deadly-boss-mods-dbm",
+        "dl_url": "",
+        "last_updated": ""
     }
 
 The script will also backup `master_addon_list.json` at the beginning of each run.
