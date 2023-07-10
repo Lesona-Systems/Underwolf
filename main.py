@@ -120,6 +120,7 @@ def main():
             elif name['location'] == 'wago':
                 print(f'Processing {key}...')
                 last_updated = get_wago_update_time(name['anchor_link'], ublock_xpi_path)
+                print(last_updated)
                 anchor_link = name['anchor_link']
                 if last_updated != name['last_updated']:
                     wago_url_list.append(anchor_link)
@@ -374,14 +375,11 @@ def get_wago_update_time(anchor_link, ublock_xpi_path):
     driver.get(anchor_link)
 
     # Wait for addon version number to be visable, then grab it from the download button.
-    version_list = [my_elem.get_attribute("innerText") for my_elem in WebDriverWait(driver, 20).until(EC.visibility_of_all_elements_located((By.XPATH, '/html/body/div[1]/div/div/div[3]/div/aside/div/div[1]/div[1]/span/time')))]
+    last_updated = [my_elem.get_attribute("innerText") for my_elem in WebDriverWait(driver, 20).until(EC.visibility_of_all_elements_located((By.XPATH, '/html/body/div[1]/div/div/div[3]/div/aside/div/div[1]/div[1]/span/time')))]
     # the above returns a list by default, so reassign "version" to the the first element in the list.
-    version_item = version_list[0]
-
-    version_split = version_item.split()
-    current_version = (version_split[-1])
-
     driver.close()
+    
+    return last_updated
 
 
 def get_wago_dl_url(anchor_link ,ublock_xpi_path):
