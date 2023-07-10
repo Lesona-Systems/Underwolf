@@ -125,7 +125,7 @@ def main():
                 if last_updated != name['last_updated']:
                     wago_url_list.append(anchor_link)
                     to_be_updated.append(key)
-                    name['last_updated'] = last_updated
+                    name['last_updated'] = last_updated[0]
             else:
                 print(f'Processing {key}...')
                 url_list.append(name['dl_url'])
