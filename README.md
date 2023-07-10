@@ -15,6 +15,14 @@ You can alternatively run `main.py` with the `--forceupdate` flag to skip versio
 
 ## Requirements
 
+The script requires four (4) things:
+
+1. Python 3.x
+2. Firefox
+3. Firefox Gecko driver
+4. uBlock Origin
+
+
 ### Clone Underwolf
 
 Clone the repo, cd into the directory, and run the following:
@@ -89,7 +97,7 @@ Add Curseforge addons to `addon_master_list.json` like so:
         "anchor_link" : "https://legacy.curseforge.com/wow/addons/deadly-boss-mods",
         "dl_url" : "https://curseforge.com/wow/addons/deadly-boss-mods/download",
         "last_updated" : ""
-    },
+    }
 
 Underwolf is currently using the legacy Curseforge website for version tracking since it gives the Unix epoch that the addon was updated. The new CF website only specifies if the addon has been updated that day.
 
