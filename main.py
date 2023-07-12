@@ -147,25 +147,6 @@ def main():
     dl_dir = get_download_path(firefox_download_directory)
     print(f'Using download directory at {colors.GREEN}{dl_dir}{colors.ENDC}')
 
-    # create temporary addon folder per OS, since WoW capitalizes its folders
-    # differently depending on OS present
-    if os.name == 'nt':
-        temp_addon_dir = "AddOns"
-        dl_dir_addons = os.path.join(dl_dir, temp_addon_dir)
-        try:
-            os.umask(0)
-            os.mkdir(dl_dir_addons, mode=0o777)
-        except FileExistsError:
-            pass
-    else:
-        temp_addon_dir = "Addons"
-        dl_dir_addons = os.path.join(dl_dir, temp_addon_dir)
-        try:
-            os.umask(0)
-            os.mkdir(dl_dir_addons, mode=0o777)
-        except FileExistsError:
-            pass
-
     # Intialize dl_dir_count to count number of files currently in Download directory
     # so we can infer when we're done. I haven't found a way to detect the difference
     # between an incomplete file download and a complete one. Neither Selenium nor Python's
@@ -215,12 +196,29 @@ def main():
     # files are the addons we just downloaded.
 
     if dl_dir_count == dl_dir_target:
-        for filename in os.listdir(dl_dir):
-            full_path = os.path.join(dl_dir, filename)
-            if os.path.getmtime(full_path) > now :
-                addon_zips.append(full_path)
-            else:
-                continue
+            for filename in os.listdir(dl_dir):
+                full_path = os.path.join(dl_dir, filename)
+                if os.path.getmtime(full_path) > now :
+                    addon_zips.append(full_path)
+
+    # create temporary addon folder per OS, since WoW capitalizes its folders
+    # differently depending on OS present
+    if os.name == 'nt':
+        temp_addon_dir = "AddOns"
+        dl_dir_addons = os.path.join(dl_dir, temp_addon_dir)
+        try:
+            os.umask(0)
+            os.mkdir(dl_dir_addons, mode=0o777)
+        except FileExistsError:
+            pass
+    else:
+        temp_addon_dir = "Addons"
+        dl_dir_addons = os.path.join(dl_dir, temp_addon_dir)
+        try:
+            os.umask(0)
+            os.mkdir(dl_dir_addons, mode=0o777)
+        except FileExistsError:
+            pass
 
     # extract each addon to temp addon directory in default download dir
     for filename in addon_zips:
@@ -263,7 +261,7 @@ def make_backup(file, filename):
     '''Copies {file} to {filename}'''
     shutil.copy(file, filename)
 
-def kill_firefox():
+def kill_firefox(): 
     '''Kills all Firefox browser processes.'''
     print('Killing browser processes...')
     if os.name == 'nt':
