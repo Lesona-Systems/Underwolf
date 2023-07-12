@@ -79,6 +79,7 @@ def main():
     tukui_url_list = []
     to_be_updated = []
     wago_url_list = []
+
     # if --forceupdate is provided as an optional argument, add download them ALL
     if args.forceupdate == True:
         for key in addon_dict.keys():
@@ -86,10 +87,12 @@ def main():
             if name['location'] == 'cf':
                 name = addon_dict[key]
                 url_list.append(name['dl_url'])
-                print(len(url_list))
+                to_be_updated.append(key)
             elif name['location'] == 'tukui':
                 dl_url = (f"{name['dl_url']}")
                 tukui_url_list.append(dl_url)
+                to_be_updated.append(key)
+
             else:
                 url_list.append(name['dl_url'])
                 to_be_updated.append(key)
@@ -144,23 +147,6 @@ def main():
     dl_dir = get_download_path(firefox_download_directory)
     print(f'Using download directory at {colors.GREEN}{dl_dir}{colors.ENDC}')
 
-    # create temporary addon folder per OS, since WoW capitalizes its folders
-    # differently depending on OS present
-    if os.name == 'nt':
-        temp_addon_dir = "AddOns"
-        dl_dir_addons = os.path.join(dl_dir, temp_addon_dir)
-        try:
-            os.mkdir(dl_dir_addons)
-        except FileExistsError:
-            pass
-    else:
-        temp_addon_dir = "Addons"
-        dl_dir_addons = os.path.join(dl_dir, temp_addon_dir)
-        try:
-            os.mkdir(dl_dir_addons)
-        except FileExistsError:
-            pass
-
     # Intialize dl_dir_count to count number of files currently in Download directory
     # so we can infer when we're done. I haven't found a way to detect the difference
     # between an incomplete file download and a complete one. Neither Selenium nor Python's
@@ -171,7 +157,7 @@ def main():
 
     # Target number of files/folders in Downloads directory equals (dl_dir_count)
     # currently in the folder plus the number of items in url_list[]
-    dl_dir_target = dl_dir_count + len(url_list) +len(tukui_url_list)
+    dl_dir_target = dl_dir_count + len(url_list) + len(tukui_url_list) + len(wago_url_list)
 
     ##############
     # Note: the following REQUIRES uBlock Origin - it fast forwards
@@ -194,11 +180,13 @@ def main():
     for url in tukui_url_list:
         print(f'Opening {colors.GREEN}{url}{colors.ENDC}')
         download_tuk_addon(url, ublock_xpi_path)
+        sleep(2)
         dl_dir_count += 1
 
     for url in wago_url_list:
         print(f'Opening {colors.GREEN}{url}{colors.ENDC}')
         dl_wago_addon(url, ublock_xpi_path)
+        sleep(2)
         dl_dir_count += 1
 
     addon_zips = []
@@ -208,17 +196,37 @@ def main():
     # files are the addons we just downloaded.
 
     if dl_dir_count == dl_dir_target:
-        for filename in os.listdir(dl_dir):
-            full_path = os.path.join(dl_dir, filename)
-            if os.path.getmtime(full_path) > now :
-                addon_zips.append(full_path)
-            else:
-                continue
+            for filename in os.listdir(dl_dir):
+                full_path = os.path.join(dl_dir, filename)
+                if os.path.getmtime(full_path) > now :
+                    addon_zips.append(full_path)
+
+    # create temporary addon folder per OS, since WoW capitalizes its folders
+    # differently depending on OS present
+    if os.name == 'nt':
+        temp_addon_dir = "AddOns"
+        dl_dir_addons = os.path.join(dl_dir, temp_addon_dir)
+        try:
+            os.umask(0)
+            os.mkdir(dl_dir_addons, mode=0o777)
+        except FileExistsError:
+            pass
+    else:
+        temp_addon_dir = "Addons"
+        dl_dir_addons = os.path.join(dl_dir, temp_addon_dir)
+        try:
+            os.umask(0)
+            os.mkdir(dl_dir_addons, mode=0o777)
+        except FileExistsError:
+            pass
 
     # extract each addon to temp addon directory in default download dir
     for filename in addon_zips:
-        with zipfile.ZipFile(filename,'r') as zipped_file:
-            zipped_file.extractall(dl_dir_addons)
+        try:
+            with zipfile.ZipFile(filename,'r') as zipped_file:
+                zipped_file.extractall(dl_dir_addons)
+        except IsADirectoryError:
+            continue
 
     addon_path = get_addon_path(addon_zips, wow_addon_directory)
 
@@ -253,7 +261,7 @@ def make_backup(file, filename):
     '''Copies {file} to {filename}'''
     shutil.copy(file, filename)
 
-def kill_firefox():
+def kill_firefox(): 
     '''Kills all Firefox browser processes.'''
     print('Killing browser processes...')
     if os.name == 'nt':
