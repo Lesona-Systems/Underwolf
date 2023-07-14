@@ -407,7 +407,8 @@ def get_wago_update_time(anchor_link, ublock_xpi_path):
 def get_wago_dl_url(anchor_link ,ublock_xpi_path):
     '''Start a visible instance of a Selenium browser, navigate to either an ElvUI
     or TukUI download link, call click on the button, and wait for the addon to download.'''
-    driver = start_browser()
+    global visible_browser
+    driver = visible_browser
 
     if os.name == 'nt':
         ublock = fr"{ublock_xpi_path}"
