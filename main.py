@@ -23,8 +23,6 @@ class colors:
     BOLD = '\033[1m'
 
 def main():
-    # Start the Selenium instances at the beginning of the script
-    start_browsers()
 
     try:
         parser = argparse.ArgumentParser()
@@ -51,7 +49,10 @@ def main():
                 quit()
             else:
                 continue
-            
+        
+        # Start the Selenium instances at the beginning of the script
+        start_browsers()
+
         # clear geckodriver.log
         if os.path.exists('geckodriver.log'):
             open('geckodriver.log', 'w').close
