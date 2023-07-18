@@ -5,6 +5,7 @@ import shutil
 import json
 import configparser
 import argparse
+import tempfile
 from time import sleep, time
 from selenium import webdriver
 from selenium.webdriver import FirefoxOptions
@@ -211,54 +212,38 @@ def main():
 
         # create temporary addon folder per OS, since WoW capitalizes its folders
         # differently depending on OS present
-        if os.name == 'nt':
-            temp_addon_dir = "AddOns"
-            dl_dir_addons = os.path.join(dl_dir, temp_addon_dir)
-            try:
-                os.umask(0)
-                os.mkdir(dl_dir_addons, mode=0o777)
-            except FileExistsError:
-                pass
-        else:
-            temp_addon_dir = "Addons"
-            dl_dir_addons = os.path.join(dl_dir, temp_addon_dir)
-            try:
-                os.umask(0)
-                os.mkdir(dl_dir_addons, mode=0o777)
-            except FileExistsError:
-                pass
+        with tempfile.TemporaryDirectory() as temp_addon_dir:
+            if os.name == 'nt':
+                dl_dir_addons = os.path.join(temp_addon_dir, "AddOns")
+            else:
+                dl_dir_addons = os.path.join(temp_addon_dir, "Addons")
 
-        # extract each addon to temp addon directory in default download dir
-        for filename in addon_zips:
+            # extract each addon to temp addon directory in default download dir
+            for filename in addon_zips:
+                try:
+                    with zipfile.ZipFile(filename,'r') as zipped_file:
+                        zipped_file.extractall(dl_dir_addons)
+                except IsADirectoryError:
+                    continue
+
+            addon_path = get_addon_path(addon_zips, wow_addon_directory)
+
+            # move addon temp dir and overwrite WoW's addon dir
             try:
-                with zipfile.ZipFile(filename,'r') as zipped_file:
-                    zipped_file.extractall(dl_dir_addons)
-            except IsADirectoryError:
-                continue
-
-        addon_path = get_addon_path(addon_zips, wow_addon_directory)
-
-        # move addon temp dir and overwrite WoW's addon dir
-        # in the except block, we've gone back and forth over whether to clean up the downloaded
-        # files and the unzipped, temp addons folder if an exception is raised. If we've gotten this
-        # far, it seems dumb to delete everything we've just downloaded. On the other hand, a 
-        # graceful failure should leave the system in the same state as it was before it ran. 
-        # Problem for another day.
-        try:
-            shutil.copytree(dl_dir_addons, addon_path, dirs_exist_ok=True)
-        except Exception:
-            print(f'{colors.FAIL}Error during folder move process...{colors.ENDC}')
-            clean_downloads(addon_zips)
-            shutil.rmtree(dl_dir_addons)
+                shutil.copytree(dl_dir_addons, addon_path, dirs_exist_ok=True)
+            except Exception:
+                print(f'{colors.FAIL}Error during folder move process...{colors.ENDC}')
+                clean_downloads(addon_zips)
 
         # Final cleanup and indicator of successful run
         final_count = len(to_be_updated)
         kill_firefox()
         clean_downloads(addon_zips)
-        clean_temp_addon_folder(dl_dir_addons)
         # update addon_master_list.json with up-to-date "last_updated" timestamps
         update_master(addon_dict, master_list)
         print(f'{final_count} addons updated. \n{colors.GREEN}Script completed successfully!{colors.ENDC} See you in Azeroth!')
+    
+    # No need to manually remove the temporary directory, Python's tempfile module will take care of it
     finally:
         close_browsers()
 
