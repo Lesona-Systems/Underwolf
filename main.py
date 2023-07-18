@@ -5,6 +5,7 @@ import shutil
 import json
 import configparser
 import argparse
+import tempfile
 from time import sleep, time
 from selenium import webdriver
 from selenium.webdriver import FirefoxOptions
@@ -181,9 +182,8 @@ def main():
         for url in url_list:
             print(f'Opening {colors.GREEN}{url}{colors.ENDC}')
             webbrowser.open_new_tab(url)
-            sleep(2)
+            sleep(2) # A conservative default is (3) for fast connections (over 25Mbs)
             dl_dir_count += 1
-        sleep(3) # A conservative default is (3) for fast connections (over 25Mbs)
 
         for url in tukui_url_list:
             print(f'Opening {colors.GREEN}{url}{colors.ENDC}')
@@ -202,39 +202,19 @@ def main():
         # For files in dl_dir, if the file's "last-modified" timestamp is later
         # than the timestamp recorded when we ran the script, assume those
         # files are the addons we just downloaded.
-
+        sleep(3)
         if dl_dir_count == dl_dir_target:
                 for filename in os.listdir(dl_dir):
                     full_path = os.path.join(dl_dir, filename)
                     if os.path.getmtime(full_path) > now :
                         addon_zips.append(full_path)
 
-        # create temporary addon folder per OS, since WoW capitalizes its folders
-        # differently depending on OS present
-        if os.name == 'nt':
-            temp_addon_dir = "AddOns"
-            dl_dir_addons = os.path.join(dl_dir, temp_addon_dir)
-            try:
-                os.umask(0)
-                os.mkdir(dl_dir_addons, mode=0o777)
-            except FileExistsError:
-                pass
-        else:
-            temp_addon_dir = "Addons"
-            dl_dir_addons = os.path.join(dl_dir, temp_addon_dir)
-            try:
-                os.umask(0)
-                os.mkdir(dl_dir_addons, mode=0o777)
-            except FileExistsError:
-                pass
-
         # extract each addon to temp addon directory in default download dir
+        temp_addon_dir = tempfile.TemporaryDirectory()
+
         for filename in addon_zips:
-            try:
                 with zipfile.ZipFile(filename,'r') as zipped_file:
-                    zipped_file.extractall(dl_dir_addons)
-            except IsADirectoryError:
-                continue
+                    zipped_file.extractall(temp_addon_dir.name)
 
         addon_path = get_addon_path(addon_zips, wow_addon_directory)
 
@@ -245,20 +225,24 @@ def main():
         # graceful failure should leave the system in the same state as it was before it ran. 
         # Problem for another day.
         try:
-            shutil.copytree(dl_dir_addons, addon_path, dirs_exist_ok=True)
+            for filename in os.listdir(temp_addon_dir.name):
+                shutil.copytree(temp_addon_dir.name, addon_path, dirs_exist_ok=True)
         except Exception:
             print(f'{colors.FAIL}Error during folder move process...{colors.ENDC}')
+            temp_addon_dir.cleanup()
             clean_downloads(addon_zips)
-            shutil.rmtree(dl_dir_addons)
+            
 
         # Final cleanup and indicator of successful run
         final_count = len(to_be_updated)
         kill_firefox()
         clean_downloads(addon_zips)
-        clean_temp_addon_folder(dl_dir_addons)
+        temp_addon_dir.cleanup()
         # update addon_master_list.json with up-to-date "last_updated" timestamps
         update_master(addon_dict, master_list)
+
         print(f'{final_count} addons updated. \n{colors.GREEN}Script completed successfully!{colors.ENDC} See you in Azeroth!')
+
     finally:
         close_browsers()
 
@@ -284,12 +268,6 @@ def clean_downloads(list):
     print(f'Cleaning {colors.GREEN}Downloaded{colors.ENDC} zips...')
     for filename in list:
         os.remove(filename)
-
-def clean_temp_addon_folder(path):
-        '''Recursively removes the provided directory.'''
-        print(f'Cleaning {colors.GREEN}Temp Addon{colors.ENDC} folder...')
-        shutil.rmtree(path)
-
 
 def get_download_path(path):
     '''Determines OS type and assigns the correct default directory depending on OS: For Windows,
@@ -337,7 +315,7 @@ def get_addon_path(addon_list, wow_addon_directory):
             quit()
 
 def start_browsers():
-    '''Start a headless instance of Selenium a full browser instance of Selenium'''
+    '''Start a headless instance of Selenium & a full browser instance of Selenium'''
     global visible_browser
     global headless_browser
 
