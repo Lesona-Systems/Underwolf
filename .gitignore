@@ -7,3 +7,5 @@ test
 geckodriver.exe
 geckodriver.log
 backup_list.json
+addon_master_list.json
+config.ini

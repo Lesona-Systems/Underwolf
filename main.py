@@ -27,20 +27,12 @@ def main():
 
     try:
         parser = argparse.ArgumentParser()
-        parser.add_argument('--forceupdate', help='Force Underwolf to download all addons in addon_master_list.json.',
+        parser.add_argument('--forceupdate', help='Disable version checking and Force Underwolf to download all addons in addon_master_list.json.',
                             action='store_true')
         args = parser.parse_args()
         
         bypass_warning = ""
-        print(r"""
-         _    _               _                                    _    __ 
-        | |  | |             | |                                  | |  / _|
-        | |  | |  _ __     __| |   ___   _ __  __      __   ___   | | | |_ 
-        | |  | | | '_ \   / _` |  / _ \ | '__| \ \ /\ / /  / _ \  | | |  _|
-        | |__| | | | | | | (_| | |  __/ | |     \ V  V /  | (_) | | | | |  
-         \____/  |_| |_|  \__,_|  \___| |_|      \_/\_/    \___/  |_| |_|  
-                                                                            
-        """)
+        print("\nUnderwolf v0.0.1")
         print(f'{colors.BOLD}{colors.BLUE}This script will close any open Firefox processes. Please ensure Firefox is closed and any in-progress downloads are finished before continuing!{colors.ENDC}')
 
         while bypass_warning != "y":
@@ -50,9 +42,6 @@ def main():
                 quit()
             else:
                 continue
-        
-        # Start the Selenium instances at the beginning of the script
-        start_browsers()
 
         # clear geckodriver.log
         if os.path.exists('geckodriver.log'):
@@ -68,7 +57,7 @@ def main():
         firefox_download_directory = config['paths']['firefox_download_directory']
         ublock_xpi_path = config['paths']['ublock_xpi_path']
 
-
+        
         master_list = 'addon_master_list.json'
         # check for addon_master_list.json. If it exists, back it up to backup_list.json. If addon_master_list does not exist, inform user, direct them to the documentation, and gracefully exit.
         if os.path.exists('addon_master_list.json'):
@@ -88,6 +77,9 @@ def main():
         tukui_url_list = []
         to_be_updated = []
         wago_url_list = []
+
+        # Start the Selenium drivers when they're needed.
+        start_browsers()
 
         # if --forceupdate is provided as an optional argument, add download them ALL
         if args.forceupdate == True:
@@ -182,7 +174,7 @@ def main():
         for url in url_list:
             print(f'Opening {colors.GREEN}{url}{colors.ENDC}')
             webbrowser.open_new_tab(url)
-            sleep(2) # A conservative default is (3) for fast connections (over 25Mbs)
+            sleep(2) # A conservative default is (3) for fast connections
             dl_dir_count += 1
 
         for url in tukui_url_list:
