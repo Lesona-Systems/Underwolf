@@ -27,20 +27,12 @@ def main():
 
     try:
         parser = argparse.ArgumentParser()
-        parser.add_argument('--forceupdate', help='Force Underwolf to download all addons in addon_master_list.json.',
+        parser.add_argument('--forceupdate', help='Disable version checking and Force Underwolf to download all addons in addon_master_list.json.',
                             action='store_true')
         args = parser.parse_args()
         
         bypass_warning = ""
-        print(r"""
-        _    _               _                                    _    __ 
-        | |  | |             | |                                  | |  / _|
-        | |  | |  _ __     __| |   ___   _ __  __      __   ___   | | | |_ 
-        | |  | | | '_ \   / _` |  / _ \ | '__| \ \ /\ / /  / _ \  | | |  _|
-        | |__| | | | | | | (_| | |  __/ | |     \ V  V /  | (_) | | | | |  
-        \____/  |_| |_|  \__,_|  \___| |_|      \_/\_/    \___/  |_| |_|  
-                                                                            
-        """)
+        print("\nUnderwolf v0.0.1")
         print(f'{colors.BOLD}{colors.BLUE}This script will close any open Firefox processes. Please ensure Firefox is closed and any in-progress downloads are finished before continuing!{colors.ENDC}')
 
         while bypass_warning != "y":
