@@ -27,8 +27,9 @@ def main():
 
     try:
         parser = argparse.ArgumentParser()
-        parser.add_argument('--forceupdate', help='Disable version checking and Force Underwolf to download all addons in addon_master_list.json.',
+        parser.add_argument('--forceupdate', help='disable version checking and force underwolf to download all addons in addon_master_list.json',
                             action='store_true')
+        parser.add_argument('')
         args = parser.parse_args()
         
         bypass_warning = ""
@@ -64,7 +65,13 @@ def main():
             make_backup(master_list, 'backup_list.json')
         else:
             print(f'{colors.FAIL}ERROR!{colors.ENDC} {colors.BOLD}addon_master_list.json{colors.ENDC} not found!')
-            print('\n Please check documentation at https://github.com/Lesona-Systems/Underwolf')
+            print('\n Please check documentation at https://github.com/Lesona-Systems/Underwolf or the README in this script\'s root folder.')
+            print(f'{colors.FAIL}Quitting!{colors.ENDC}')
+            quit()
+
+        if os.path.exists(ublock_xpi_path) == False:
+            print(f'{colors.FAIL}ERROR!{colors.ENDC} {colors.BOLD}UBlock Origin{colors.ENDC} not found!')
+            print('\n Please check documentation at https://github.com/Lesona-Systems/Underwolf or the README in this script\'s root folder.')
             print(f'{colors.FAIL}Quitting!{colors.ENDC}')
             quit()
 
@@ -81,7 +88,7 @@ def main():
         # Start the Selenium drivers when they're needed.
         start_browsers()
 
-        # if --forceupdate is provided as an optional argument, add download them ALL
+        # if --forceupdate in arg, bypass ver. check & add all addons to download list 
         if args.forceupdate == True:
             for key in addon_dict.keys():
                 name = addon_dict[key]
@@ -327,7 +334,6 @@ def close_browsers():
     if headless_browser is not None:
         headless_browser.quit()
 
-
 def get_cf_update_time(cf_url, ublock_xpi_path):
     '''Start an instance of the Selenium browser, activate the uBlock origin .xpi file
     from the provided ublock_xpi_path, navigate to the provided curseforge url (cf_url),
@@ -373,7 +379,6 @@ def get_wago_update_time(anchor_link, ublock_xpi_path):
     # the above returns a list by default, so reassign "version" to the the first element in the list.
     
     return last_updated
-
 
 def get_wago_dl_url(anchor_link ,ublock_xpi_path):
     '''Start a visible instance of a Selenium browser, navigate to either an ElvUI
