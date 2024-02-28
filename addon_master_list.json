@@ -3,37 +3,37 @@
         "location": "cf",
         "anchor_link": "https://legacy.curseforge.com/wow/addons/deadly-boss-mods",
         "dl_url": "https://curseforge.com/wow/addons/deadly-boss-mods/download",
-        "last_updated": "1706828872"
+        "last_updated": "1708179255"
     },
     "DBM-DUNGEONS": {
         "location": "cf",
         "anchor_link": "https://legacy.curseforge.com/wow/addons/deadly-boss-mods-dbm-dungeons",
         "dl_url": "https://curseforge.com/wow/addons/deadly-boss-mods-dbm-dungeons/download",
-        "last_updated": "1706667918"
+        "last_updated": "1708132108"
     },
     "DETAILS": {
         "location": "cf",
         "anchor_link": "https://legacy.curseforge.com/wow/addons/details",
         "dl_url": "https://curseforge.com/wow/addons/details/download",
-        "last_updated": "1706718938"
+        "last_updated": "1708027502"
     },
     "WEAKAURAS2": {
         "location": "cf",
         "anchor_link": "https://legacy.curseforge.com/wow/addons/weakauras-2",
         "dl_url": "https://curseforge.com/wow/addons/weakauras-2/download",
-        "last_updated": "1706724629"
+        "last_updated": "1707737547"
     },
     "RARESCANNER": {
         "location": "cf",
         "anchor_link": "https://legacy.curseforge.com/wow/addons/rarescanner",
         "dl_url": "https://curseforge.com/wow/addons/rarescanner/download",
-        "last_updated": "1706719280"
+        "last_updated": "1708181752"
     },
     "PAWN": {
         "location": "cf",
         "anchor_link": "https://legacy.curseforge.com/wow/addons/pawn",
         "dl_url": "https://curseforge.com/wow/addons/pawn/download",
-        "last_updated": "1705443184"
+        "last_updated": "1707070999"
     },
     "HANDYNOTES": {
         "location": "cf",
@@ -51,7 +51,7 @@
         "location": "cf",
         "anchor_link": "https://legacy.curseforge.com/wow/addons/all-the-things",
         "dl_url": "https://curseforge.com/wow/addons/all-the-things/download",
-        "last_updated": "1706768195"
+        "last_updated": "1708134837"
     },
     "SIMULATIONCRAFT": {
         "location": "cf",
@@ -63,12 +63,12 @@
         "location": "cf",
         "anchor_link": "https://legacy.curseforge.com/wow/addons/plater-nameplates",
         "dl_url": "https://www.curseforge.com/wow/addons/plater-nameplates",
-        "last_updated": "1706631380"
+        "last_updated": "1708093392"
     },
     "ELVUI": {
         "location": "tukui",
         "anchor_link": "https://tukui.org/elvui",
         "dl_url": "https://tukui.org/elvui",
-        "current_version": "13.55"
+        "current_version": "13.58"
     }
 }

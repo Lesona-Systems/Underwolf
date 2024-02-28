@@ -29,7 +29,6 @@ def main():
         parser = argparse.ArgumentParser()
         parser.add_argument('--forceupdate', help='disable version checking and force underwolf to download all addons in addon_master_list.json',
                             action='store_true')
-        parser.add_argument('')
         args = parser.parse_args()
         
         bypass_warning = ""
